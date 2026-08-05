@@ -62,8 +62,9 @@ atom that is no longer the target.
 
 ## The four jobs
 
-Each is 323 protein residues (SUMO2 construct 96 + UBE2W 151 + ubiquitin 76)
-plus the LisoK ligand, with 5 seeds.
+Charged jobs: 321 protein residues (SUMO2 96 + UBE2W 151 + ubiquitin **1-74**)
+plus 3 ligands (LisoK + two GLY carrying the reactive C-terminus). Product jobs:
+323 protein residues (ubiquitin 1-76) plus the LisoK ligand. Both at 25 seeds.
 
 | file | site | state | bonds |
 |---|---|---|---|
@@ -105,9 +106,11 @@ python run_alphafold.py --json_path=sumo2_k11lisok_ube2w_ub_charged.json \
                         --output_dir=out/ --model_dir=<weights>
 ```
 
-MSAs: all four jobs share the same three protein sequences, so if you have a way
-to compute the data pipeline once and reuse it, that saves three quarters of the
-search time. In our hands jackhmmer against the full AF3 database set took 4–6 h
+MSAs: **two** distinct protein-sequence sets, not one. The charged jobs carry
+ubiquitin 1-74 (see `docs/AF3_POLYMER_BOND_LIMIT.md` for why it is split) and the
+product jobs carry 1-76, so each pair needs its own data-pipeline run. Within a
+pair the two sites differ only in which lysine is bonded, which does not change
+the sequence AF3 searches with, so one run serves both sites. In our hands jackhmmer against the full AF3 database set took 4–6 h
 per job because it is I/O-bound on the database reads, while inference itself is
 ~10 min. If reuse is awkward, just run all four — it is 4 searches, not 20.
 

@@ -91,9 +91,12 @@ of five.
 Since the MSA is computed once per sequence set (4–6 h in our hands, I/O-bound on
 the database reads) and inference is ~10 min per seed, seeds are the cheap axis.
 
-All four jobs share the same three protein sequences, so if your pipeline can
-compute the data pipeline once and reuse it across them, that's most of the cost
-saved.
+**Two data-pipeline runs, not four.** The split means ubiquitin is 1–74 in the
+charged jobs and 1–76 in the product jobs, so those are two distinct
+protein-sequence sets. Within each pair the two sites differ only in which lysine
+carries the bond, which does not change the sequence AF3 searches with — so one
+MSA run serves both sites of a pair. (An earlier version of this note said all
+four shared one set; that was written before the split fix and was wrong.)
 
 ## Full detail
 

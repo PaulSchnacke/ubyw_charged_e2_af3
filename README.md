@@ -26,7 +26,10 @@ python run_alphafold.py --json_path=jobs/sumo2_k11lisok_ube2w_ub_charged.json \
 | `jobs/sumo2_k11lisok_ube2w_ub_product.json` | K11 | product isopeptide — positive control |
 | `jobs/sumo2_k21lisok_ube2w_ub_product.json` | K21 | product isopeptide — positive control |
 
-Each is self-contained: 323 protein residues, 5 seeds, `userCCD` embedded.
+Each is self-contained, 25 seeds, `userCCD` embedded. Charged jobs are 321
+protein residues + 3 ligands (ubiquitin is split at Arg74 -- see
+[docs/AF3_POLYMER_BOND_LIMIT.md](docs/AF3_POLYMER_BOND_LIMIT.md)); product jobs
+are 323 + 1.
 
 ## Then QC
 
