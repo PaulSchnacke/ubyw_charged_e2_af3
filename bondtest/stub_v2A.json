@@ -1,22 +1,31 @@
 {
- "name": "sumo2_k11lisok_ube2w_ub_charged",
+ "name": "stub_v2A_glyglyligand",
  "sequences": [
   {
    "protein": {
     "id": "A",
-    "sequence": "PMADEKPKEGVKTENNDHINLKVAGQDGSVVQFKIKRHTPLSKLMKAYCERQGLSMRQIRFRFDGQPINETDTPAQLEMEDEDTIDVFQQQTGGVY"
+    "sequence": "PMADEKPKEGVKTENNDHINLKVAGQDGSVVQFKIKRHTPLSKLMKAYCERQGLSMRQIRFRFDGQPINETDTPAQLEMEDEDTIDVFQQQTGGVY",
+    "unpairedMsa": ">q_A\nPMADEKPKEGVKTENNDHINLKVAGQDGSVVQFKIKRHTPLSKLMKAYCERQGLSMRQIRFRFDGQPINETDTPAQLEMEDEDTIDVFQQQTGGVY\n",
+    "pairedMsa": "",
+    "templates": []
    }
   },
   {
    "protein": {
     "id": "B",
-    "sequence": "MASMQKRLQKELLALQNDPPPGMTLNEKSVQNSITQWIVDMEGAPGTLYEGEKFQLLFKFSSRYPFDSPQVMFTGENIPVHPHVYSNGHICLSILTEDWSPALSVQSVCLSIISMLSSCKEKRRPPDNSFYVRTCNKNPKKTKWWYHDDTC"
+    "sequence": "MASMQKRLQKELLALQNDPPPGMTLNEKSVQNSITQWIVDMEGAPGTLYEGEKFQLLFKFSSRYPFDSPQVMFTGENIPVHPHVYSNGHICLSILTEDWSPALSVQSVCLSIISMLSSCKEKRRPPDNSFYVRTCNKNPKKTKWWYHDDTC",
+    "unpairedMsa": ">q_B\nMASMQKRLQKELLALQNDPPPGMTLNEKSVQNSITQWIVDMEGAPGTLYEGEKFQLLFKFSSRYPFDSPQVMFTGENIPVHPHVYSNGHICLSILTEDWSPALSVQSVCLSIISMLSSCKEKRRPPDNSFYVRTCNKNPKKTKWWYHDDTC\n",
+    "pairedMsa": "",
+    "templates": []
    }
   },
   {
    "protein": {
     "id": "U",
-    "sequence": "MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG"
+    "sequence": "MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLR",
+    "unpairedMsa": ">q_U\nMQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLR\n",
+    "pairedMsa": "",
+    "templates": []
    }
   },
   {
@@ -26,29 +35,26 @@
      "LIG-1"
     ]
    }
+  },
+  {
+   "ligand": {
+    "id": "G",
+    "ccdCodes": [
+     "GLY"
+    ]
+   }
+  },
+  {
+   "ligand": {
+    "id": "H",
+    "ccdCodes": [
+     "GLY"
+    ]
+   }
   }
  ],
  "modelSeeds": [
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  11,
-  12,
-  13,
-  14,
-  15,
-  16,
-  17,
-  18,
-  19,
-  20
+  1
  ],
  "dialect": "alphafold3",
  "version": 1,
@@ -68,7 +74,31 @@
   [
    [
     "U",
-    76,
+    74,
+    "C"
+   ],
+   [
+    "G",
+    1,
+    "N"
+   ]
+  ],
+  [
+   [
+    "G",
+    1,
+    "C"
+   ],
+   [
+    "H",
+    1,
+    "N"
+   ]
+  ],
+  [
+   [
+    "H",
+    1,
     "C"
    ],
    [
