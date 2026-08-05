@@ -16,7 +16,7 @@
   {
    "protein": {
     "id": "U",
-    "sequence": "MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG"
+    "sequence": "MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLR"
    }
   },
   {
@@ -24,6 +24,22 @@
     "id": "L",
     "ccdCodes": [
      "LIG-1"
+    ]
+   }
+  },
+  {
+   "ligand": {
+    "id": "G",
+    "ccdCodes": [
+     "GLY"
+    ]
+   }
+  },
+  {
+   "ligand": {
+    "id": "H",
+    "ccdCodes": [
+     "GLY"
     ]
    }
   }
@@ -48,7 +64,12 @@
   17,
   18,
   19,
-  20
+  20,
+  21,
+  22,
+  23,
+  24,
+  25
  ],
  "dialect": "alphafold3",
  "version": 1,
@@ -68,7 +89,31 @@
   [
    [
     "U",
-    76,
+    74,
+    "C"
+   ],
+   [
+    "G",
+    1,
+    "N"
+   ]
+  ],
+  [
+   [
+    "G",
+    1,
+    "C"
+   ],
+   [
+    "H",
+    1,
+    "N"
+   ]
+  ],
+  [
+   [
+    "H",
+    1,
     "C"
    ],
    [
