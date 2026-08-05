@@ -1,0 +1,67 @@
+{
+ "name": "sumo2_k21lisok_ube2w_ub_charged",
+ "sequences": [
+  {
+   "protein": {
+    "id": "A",
+    "sequence": "PMADEKPKEGVKTENNDHINLKVAGQDGSVVQFKIKRHTPLSKLMKAYCERQGLSMRQIRFRFDGQPINETDTPAQLEMEDEDTIDVFQQQTGGVY"
+   }
+  },
+  {
+   "protein": {
+    "id": "B",
+    "sequence": "MASMQKRLQKELLALQNDPPPGMTLNEKSVQNSITQWIVDMEGAPGTLYEGEKFQLLFKFSSRYPFDSPQVMFTGENIPVHPHVYSNGHICLSILTEDWSPALSVQSVCLSIISMLSSCKEKRRPPDNSFYVRTCNKNPKKTKWWYHDDTC"
+   }
+  },
+  {
+   "protein": {
+    "id": "U",
+    "sequence": "MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG"
+   }
+  },
+  {
+   "ligand": {
+    "id": "L",
+    "ccdCodes": [
+     "LIG-1"
+    ]
+   }
+  }
+ ],
+ "modelSeeds": [
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "dialect": "alphafold3",
+ "version": 1,
+ "bondedAtomPairs": [
+  [
+   [
+    "A",
+    22,
+    "NZ"
+   ],
+   [
+    "L",
+    1,
+    "C01"
+   ]
+  ],
+  [
+   [
+    "U",
+    76,
+    "C"
+   ],
+   [
+    "B",
+    91,
+    "SG"
+   ]
+  ]
+ ],
+ "userCCD": "data_LIG-1\n#\n_chem_comp.id LIG-1\n_chem_comp.name 'L-leucyl isopeptide moiety (LisoK)'\n_chem_comp.type non-polymer\n_chem_comp.formula ?\n_chem_comp.mon_nstd_parent_comp_id ?\n_chem_comp.pdbx_synonyms ?\n_chem_comp.formula_weight ?\n#\nloop_\n_chem_comp_atom.comp_id\n_chem_comp_atom.atom_id\n_chem_comp_atom.type_symbol\n_chem_comp_atom.charge\n_chem_comp_atom.pdbx_leaving_atom_flag\n_chem_comp_atom.pdbx_model_Cartn_x_ideal\n_chem_comp_atom.pdbx_model_Cartn_y_ideal\n_chem_comp_atom.pdbx_model_Cartn_z_ideal\nLIG-1 O01 O 0 N 1.884 2.656 1.285\nLIG-1 C01 C 0 N 1.248 1.608 1.208\nLIG-1 C02 C 0 N 1.657 0.446 0.316\nLIG-1 N01 N 0 N 1.757 -0.773 1.128\nLIG-1 C03 C 0 N 0.711 0.300 -0.887\nLIG-1 C04 C 0 N -0.805 0.169 -0.618\nLIG-1 C05 C 0 N -1.556 0.166 -1.955\nLIG-1 C06 C 0 N -1.187 -1.080 0.176\nLIG-1 H01 H 0 N 0.319 1.470 1.787\nLIG-1 H02 H 0 N 2.660 0.669 -0.069\nLIG-1 H03 H 0 N 2.045 -1.549 0.532\nLIG-1 H04 H 0 N 2.510 -0.657 1.809\nLIG-1 H05 H 0 N 0.859 1.186 -1.521\nLIG-1 H06 H 0 N 1.043 -0.555 -1.493\nLIG-1 H07 H 0 N -1.147 1.048 -0.059\nLIG-1 H08 H 0 N -2.639 0.128 -1.794\nLIG-1 H09 H 0 N -1.274 -0.698 -2.567\nLIG-1 H10 H 0 N -1.339 1.074 -2.527\nLIG-1 H11 H 0 N -0.846 -1.013 1.212\nLIG-1 H12 H 0 N -0.763 -1.984 -0.274\nLIG-1 H13 H 0 N -2.275 -1.202 0.211\n#\nloop_\n_chem_comp_bond.atom_id_1\n_chem_comp_bond.atom_id_2\n_chem_comp_bond.value_order\n_chem_comp_bond.pdbx_aromatic_flag\nO01 C01 DOUB N\nC01 C02 SING N\nC02 N01 SING N\nC02 C03 SING N\nC03 C04 SING N\nC04 C05 SING N\nC04 C06 SING N\nC01 H01 SING N\nC02 H02 SING N\nN01 H03 SING N\nN01 H04 SING N\nC03 H05 SING N\nC03 H06 SING N\nC04 H07 SING N\nC05 H08 SING N\nC05 H09 SING N\nC05 H10 SING N\nC06 H11 SING N\nC06 H12 SING N\nC06 H13 SING N\n#\n"
+}

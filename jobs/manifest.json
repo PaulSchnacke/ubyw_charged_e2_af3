@@ -1,0 +1,72 @@
+{
+ "jobs": [
+  {
+   "name": "sumo2_k11lisok_ube2w_ub_charged",
+   "file": "sumo2_k11lisok_ube2w_ub_charged.json",
+   "site": "k11",
+   "construct_residue": 12,
+   "state": "charged",
+   "n_protein_residues": 323,
+   "n_bonds": 2,
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "name": "sumo2_k11lisok_ube2w_ub_product",
+   "file": "sumo2_k11lisok_ube2w_ub_product.json",
+   "site": "k11",
+   "construct_residue": 12,
+   "state": "product",
+   "n_protein_residues": 323,
+   "n_bonds": 2,
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "name": "sumo2_k21lisok_ube2w_ub_charged",
+   "file": "sumo2_k21lisok_ube2w_ub_charged.json",
+   "site": "k21",
+   "construct_residue": 22,
+   "state": "charged",
+   "n_protein_residues": 323,
+   "n_bonds": 2,
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "name": "sumo2_k21lisok_ube2w_ub_product",
+   "file": "sumo2_k21lisok_ube2w_ub_product.json",
+   "site": "k21",
+   "construct_residue": 22,
+   "state": "product",
+   "n_protein_residues": 323,
+   "n_bonds": 2,
+   "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  }
+ ],
+ "qc_atom_pairs": {
+  "charged": "L:1:N01 -> U:76:C  (attack on the thioester carbonyl -- THE measurement)",
+  "reference": "L:1:N01 -> B:91:SG  (comparable to the uncharged rounds)"
+ }
+}
