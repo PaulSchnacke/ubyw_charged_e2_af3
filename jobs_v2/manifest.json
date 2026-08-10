@@ -1,0 +1,32 @@
+[
+ {
+  "name": "sumo2_k11_xisok_ube2w",
+  "bonds": 1,
+  "seeds": 3,
+  "chains": 3
+ },
+ {
+  "name": "sumo2_k11_lyscontrol_ube2w",
+  "bonds": 0,
+  "seeds": 3,
+  "chains": 2
+ },
+ {
+  "name": "sumo2_k11_charged_ube2w",
+  "bonds": 3,
+  "seeds": 3,
+  "chains": 5
+ },
+ {
+  "name": "sumo2_k11_tetrahedral_ube2w",
+  "bonds": 4,
+  "seeds": 3,
+  "chains": 5
+ },
+ {
+  "name": "sumo2_k11_product_ube2w",
+  "bonds": 2,
+  "seeds": 3,
+  "chains": 4
+ }
+]

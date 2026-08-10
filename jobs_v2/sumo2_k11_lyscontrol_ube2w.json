@@ -1,0 +1,24 @@
+{
+ "name": "sumo2_k11_lyscontrol_ube2w",
+ "sequences": [
+  {
+   "protein": {
+    "id": "A",
+    "sequence": "PMADEKPKEGVKTENNDHINLKVAGQDGSVVQFKIKRHTPLSKLMKAYCERQGLSMRQIRFRFDGQPINETDTPAQLEMEDEDTIDVFQQQTGGVY"
+   }
+  },
+  {
+   "protein": {
+    "id": "B",
+    "sequence": "MASMQKRLQKELLALQNDPPPGMTLNEKSVQNSITQWIVDMEGAPGTLYEGEKFQLLFKFSSRYPFDSPQVMFTGENIPVHPHVYSNGHICLSILTEDWSPALSVQSVCLSIISMLSSCKEKRRPPDNSFYVRTCNKNPKKTKWWYHDDTC"
+   }
+  }
+ ],
+ "modelSeeds": [
+  1,
+  2,
+  3
+ ],
+ "dialect": "alphafold3",
+ "version": 1
+}

@@ -1,0 +1,51 @@
+{
+ "name": "stub_sumo2_k11_xisok_ube2w",
+ "sequences": [
+  {
+   "protein": {
+    "id": "A",
+    "sequence": "PMADEKPKEGVKTENNDHINLKVAGQDGSVVQFKIKRHTPLSKLMKAYCERQGLSMRQIRFRFDGQPINETDTPAQLEMEDEDTIDVFQQQTGGVY",
+    "unpairedMsa": ">q_A\nPMADEKPKEGVKTENNDHINLKVAGQDGSVVQFKIKRHTPLSKLMKAYCERQGLSMRQIRFRFDGQPINETDTPAQLEMEDEDTIDVFQQQTGGVY\n",
+    "pairedMsa": "",
+    "templates": []
+   }
+  },
+  {
+   "protein": {
+    "id": "B",
+    "sequence": "MASMQKRLQKELLALQNDPPPGMTLNEKSVQNSITQWIVDMEGAPGTLYEGEKFQLLFKFSSRYPFDSPQVMFTGENIPVHPHVYSNGHICLSILTEDWSPALSVQSVCLSIISMLSSCKEKRRPPDNSFYVRTCNKNPKKTKWWYHDDTC",
+    "unpairedMsa": ">q_B\nMASMQKRLQKELLALQNDPPPGMTLNEKSVQNSITQWIVDMEGAPGTLYEGEKFQLLFKFSSRYPFDSPQVMFTGENIPVHPHVYSNGHICLSILTEDWSPALSVQSVCLSIISMLSSCKEKRRPPDNSFYVRTCNKNPKKTKWWYHDDTC\n",
+    "pairedMsa": "",
+    "templates": []
+   }
+  },
+  {
+   "ligand": {
+    "id": "L",
+    "ccdCodes": [
+     "LIG-1"
+    ]
+   }
+  }
+ ],
+ "modelSeeds": [
+  1
+ ],
+ "dialect": "alphafold3",
+ "version": 1,
+ "bondedAtomPairs": [
+  [
+   [
+    "A",
+    12,
+    "NZ"
+   ],
+   [
+    "L",
+    1,
+    "C01"
+   ]
+  ]
+ ],
+ "userCCD": "data_LIG-1\n#\n_chem_comp.id LIG-1\n_chem_comp.name 'L-leucine isopeptide moiety (LisoK)'\n_chem_comp.type non-polymer\n_chem_comp.formula ?\n_chem_comp.mon_nstd_parent_comp_id ?\n_chem_comp.pdbx_synonyms ?\n_chem_comp.formula_weight ?\n#\nloop_\n_chem_comp_atom.comp_id\n_chem_comp_atom.atom_id\n_chem_comp_atom.type_symbol\n_chem_comp_atom.charge\n_chem_comp_atom.pdbx_leaving_atom_flag\n_chem_comp_atom.pdbx_model_Cartn_x_ideal\n_chem_comp_atom.pdbx_model_Cartn_y_ideal\n_chem_comp_atom.pdbx_model_Cartn_z_ideal\nLIG-1 O01 O 0 N -3.293 1.243 -0.910\nLIG-1 C01 C 0 N -2.846 0.360 -0.195\nLIG-1 C02 C 0 N -1.395 0.174 0.213\nLIG-1 N01 N 0 N -1.304 -1.015 1.072\nLIG-1 C03 C 0 N -0.519 0.049 -1.043\nLIG-1 C04 C 0 N 1.013 0.080 -0.852\nLIG-1 C05 C 0 N 1.572 -1.166 -0.168\nLIG-1 C06 C 0 N 1.487 1.344 -0.134\nLIG-1 H01 H 0 N -1.120 1.054 0.803\nLIG-1 H02 H 0 N -1.580 -1.852 0.560\nLIG-1 H03 H 0 N -1.927 -0.928 1.875\nLIG-1 H04 H 0 N -0.776 0.871 -1.725\nLIG-1 H05 H 0 N -0.790 -0.866 -1.589\nLIG-1 H06 H 0 N 1.445 0.103 -1.862\nLIG-1 H07 H 0 N 1.185 -2.078 -0.634\nLIG-1 H08 H 0 N 2.664 -1.188 -0.255\nLIG-1 H09 H 0 N 1.335 -1.192 0.899\nLIG-1 H10 H 0 N 1.181 1.353 0.917\nLIG-1 H11 H 0 N 2.581 1.411 -0.159\nLIG-1 H12 H 0 N 1.087 2.241 -0.617\n#\nloop_\n_chem_comp_bond.atom_id_1\n_chem_comp_bond.atom_id_2\n_chem_comp_bond.value_order\n_chem_comp_bond.pdbx_aromatic_flag\nO01 C01 DOUB N\nC01 C02 SING N\nC02 N01 SING N\nC02 C03 SING N\nC03 C04 SING N\nC04 C05 SING N\nC04 C06 SING N\nC02 H01 SING N\nN01 H02 SING N\nN01 H03 SING N\nC03 H04 SING N\nC03 H05 SING N\nC04 H06 SING N\nC05 H07 SING N\nC05 H08 SING N\nC05 H09 SING N\nC06 H10 SING N\nC06 H11 SING N\nC06 H12 SING N\n#\n"
+}

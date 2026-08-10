@@ -1,0 +1,60 @@
+data_LIG-1
+#
+_chem_comp.id LIG-1
+_chem_comp.name 'photo-leucine isopeptide moiety (pLisoK)'
+_chem_comp.type non-polymer
+_chem_comp.formula ?
+_chem_comp.mon_nstd_parent_comp_id ?
+_chem_comp.pdbx_synonyms ?
+_chem_comp.formula_weight ?
+#
+loop_
+_chem_comp_atom.comp_id
+_chem_comp_atom.atom_id
+_chem_comp_atom.type_symbol
+_chem_comp_atom.charge
+_chem_comp_atom.pdbx_leaving_atom_flag
+_chem_comp_atom.pdbx_model_Cartn_x_ideal
+_chem_comp_atom.pdbx_model_Cartn_y_ideal
+_chem_comp_atom.pdbx_model_Cartn_z_ideal
+LIG-1 O01 O 0 N -0.724 1.336 -1.742
+LIG-1 C01 C 0 N -1.542 0.616 -1.194
+LIG-1 C02 C 0 N -1.389 -0.100 0.135
+LIG-1 N01 N 0 N -2.382 -1.193 0.184
+LIG-1 C03 C 0 N 0.024 -0.670 0.305
+LIG-1 C04 C 0 N 1.074 0.388 0.540
+LIG-1 C05 C 0 N 2.186 0.507 -0.451
+LIG-1 N02 N 0 N 1.421 0.657 1.948
+LIG-1 N03 N 0 N 0.762 1.544 1.388
+LIG-1 H01 H 0 N -1.632 0.613 0.929
+LIG-1 H02 H 0 N -2.244 -1.847 -0.586
+LIG-1 H03 H 0 N -3.328 -0.821 0.101
+LIG-1 H04 H 0 N 0.295 -1.263 -0.579
+LIG-1 H05 H 0 N 0.041 -1.366 1.154
+LIG-1 H06 H 0 N 2.814 -0.390 -0.424
+LIG-1 H07 H 0 N 2.825 1.372 -0.243
+LIG-1 H08 H 0 N 1.797 0.618 -1.467
+#
+loop_
+_chem_comp_bond.atom_id_1
+_chem_comp_bond.atom_id_2
+_chem_comp_bond.value_order
+_chem_comp_bond.pdbx_aromatic_flag
+O01 C01 DOUB N
+C01 C02 SING N
+C02 N01 SING N
+C02 C03 SING N
+C03 C04 SING N
+C04 C05 SING N
+C04 N02 SING N
+N02 N03 DOUB N
+N03 C04 SING N
+C02 H01 SING N
+N01 H02 SING N
+N01 H03 SING N
+C03 H04 SING N
+C03 H05 SING N
+C05 H06 SING N
+C05 H07 SING N
+C05 H08 SING N
+#

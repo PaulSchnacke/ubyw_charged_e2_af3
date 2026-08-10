@@ -1,0 +1,97 @@
+{
+ "name": "sumo2_k11_tetrahedral_ube2w",
+ "sequences": [
+  {
+   "protein": {
+    "id": "A",
+    "sequence": "PMADEKPKEGVKTENNDHINLKVAGQDGSVVQFKIKRHTPLSKLMKAYCERQGLSMRQIRFRFDGQPINETDTPAQLEMEDEDTIDVFQQQTGGVY"
+   }
+  },
+  {
+   "protein": {
+    "id": "B",
+    "sequence": "MASMQKRLQKELLALQNDPPPGMTLNEKSVQNSITQWIVDMEGAPGTLYEGEKFQLLFKFSSRYPFDSPQVMFTGENIPVHPHVYSNGHICLSILTEDWSPALSVQSVCLSIISMLSSCKEKRRPPDNSFYVRTCNKNPKKTKWWYHDDTC"
+   }
+  },
+  {
+   "protein": {
+    "id": "U",
+    "sequence": "MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLR"
+   }
+  },
+  {
+   "ligand": {
+    "id": "L",
+    "ccdCodes": [
+     "LIG-1"
+    ]
+   }
+  },
+  {
+   "ligand": {
+    "id": "G",
+    "ccdCodes": [
+     "UBGT"
+    ]
+   }
+  }
+ ],
+ "modelSeeds": [
+  1,
+  2,
+  3
+ ],
+ "dialect": "alphafold3",
+ "version": 1,
+ "bondedAtomPairs": [
+  [
+   [
+    "A",
+    12,
+    "NZ"
+   ],
+   [
+    "L",
+    1,
+    "C01"
+   ]
+  ],
+  [
+   [
+    "U",
+    74,
+    "C"
+   ],
+   [
+    "G",
+    1,
+    "N1"
+   ]
+  ],
+  [
+   [
+    "G",
+    1,
+    "C2"
+   ],
+   [
+    "B",
+    91,
+    "SG"
+   ]
+  ],
+  [
+   [
+    "L",
+    1,
+    "N01"
+   ],
+   [
+    "G",
+    1,
+    "C2"
+   ]
+  ]
+ ],
+ "userCCD": "data_LIG-1\n#\n_chem_comp.id LIG-1\n_chem_comp.name 'L-leucine isopeptide moiety (LisoK) (amine open for the incoming Ub bond)'\n_chem_comp.type non-polymer\n_chem_comp.formula ?\n_chem_comp.mon_nstd_parent_comp_id ?\n_chem_comp.pdbx_synonyms ?\n_chem_comp.formula_weight ?\n#\nloop_\n_chem_comp_atom.comp_id\n_chem_comp_atom.atom_id\n_chem_comp_atom.type_symbol\n_chem_comp_atom.charge\n_chem_comp_atom.pdbx_leaving_atom_flag\n_chem_comp_atom.pdbx_model_Cartn_x_ideal\n_chem_comp_atom.pdbx_model_Cartn_y_ideal\n_chem_comp_atom.pdbx_model_Cartn_z_ideal\nLIG-1 O01 O 0 N 3.019 -1.652 -1.055\nLIG-1 C01 C 0 N 2.041 -0.926 -1.164\nLIG-1 C02 C 0 N 1.704 0.263 -0.294\nLIG-1 N01 N 0 N 2.564 1.376 -0.701\nLIG-1 C03 C 0 N 0.235 0.657 -0.489\nLIG-1 C04 C 0 N -0.787 -0.413 -0.045\nLIG-1 C05 C 0 N -2.204 0.054 -0.388\nLIG-1 C06 C 0 N -0.696 -0.723 1.450\nLIG-1 H01 H 0 N 1.910 0.001 0.748\nLIG-1 H02 H 0 N 2.456 2.149 -0.045\nLIG-1 H03 H 0 N 0.034 1.586 0.062\nLIG-1 H04 H 0 N 0.060 0.881 -1.551\nLIG-1 H05 H 0 N -0.602 -1.341 -0.600\nLIG-1 H06 H 0 N -2.303 0.243 -1.462\nLIG-1 H07 H 0 N -2.459 0.978 0.144\nLIG-1 H08 H 0 N -2.942 -0.708 -0.116\nLIG-1 H09 H 0 N -1.485 -1.422 1.750\nLIG-1 H10 H 0 N 0.260 -1.190 1.704\nLIG-1 H11 H 0 N -0.805 0.185 2.052\n#\nloop_\n_chem_comp_bond.atom_id_1\n_chem_comp_bond.atom_id_2\n_chem_comp_bond.value_order\n_chem_comp_bond.pdbx_aromatic_flag\nO01 C01 DOUB N\nC01 C02 SING N\nC02 N01 SING N\nC02 C03 SING N\nC03 C04 SING N\nC04 C05 SING N\nC04 C06 SING N\nC02 H01 SING N\nN01 H02 SING N\nC03 H03 SING N\nC03 H04 SING N\nC04 H05 SING N\nC05 H06 SING N\nC05 H07 SING N\nC05 H08 SING N\nC06 H09 SING N\nC06 H10 SING N\nC06 H11 SING N\n#\n\ndata_UBGT\n#\n_chem_comp.id UBGT\n_chem_comp.name 'Ub Gly75-Gly76, tetrahedral intermediate: C2 is sp3 with an alkoxide O, accepting both SG and the incoming amine'\n_chem_comp.type non-polymer\n_chem_comp.formula ?\n_chem_comp.mon_nstd_parent_comp_id ?\n_chem_comp.pdbx_synonyms ?\n_chem_comp.formula_weight ?\n#\nloop_\n_chem_comp_atom.comp_id\n_chem_comp_atom.atom_id\n_chem_comp_atom.type_symbol\n_chem_comp_atom.charge\n_chem_comp_atom.pdbx_leaving_atom_flag\n_chem_comp_atom.pdbx_model_Cartn_x_ideal\n_chem_comp_atom.pdbx_model_Cartn_y_ideal\n_chem_comp_atom.pdbx_model_Cartn_z_ideal\nUBGT N1 N 0 N 1.843 0.080 -1.416\nUBGT CA1 C 0 N 2.050 0.834 -0.172\nUBGT C1 C 0 N 0.979 0.500 0.866\nUBGT O1 O 0 N 1.124 0.773 2.056\nUBGT N2 N 0 N -0.154 -0.104 0.367\nUBGT CA2 C 0 N -1.341 -0.268 1.180\nUBGT C2 C 0 N -2.313 -1.243 0.533\nUBGT O2 O 0 N -2.648 -0.803 -0.780\nUBGT H01 H 0 N 1.895 -0.917 -1.197\nUBGT H02 H 0 N 2.006 1.906 -0.381\nUBGT H03 H 0 N 3.032 0.586 0.242\nUBGT H04 H 0 N -0.305 -0.009 -0.635\nUBGT H05 H 0 N -1.803 0.719 1.288\nUBGT H06 H 0 N -1.054 -0.623 2.175\nUBGT H07 H 0 N -3.311 -1.429 -1.118\n#\nloop_\n_chem_comp_bond.atom_id_1\n_chem_comp_bond.atom_id_2\n_chem_comp_bond.value_order\n_chem_comp_bond.pdbx_aromatic_flag\nN1 CA1 SING N\nCA1 C1 SING N\nC1 O1 DOUB N\nC1 N2 SING N\nN2 CA2 SING N\nCA2 C2 SING N\nC2 O2 SING N\nN1 H01 SING N\nCA1 H02 SING N\nCA1 H03 SING N\nN2 H04 SING N\nCA2 H05 SING N\nCA2 H06 SING N\nO2 H07 SING N\n#\n"
+}
