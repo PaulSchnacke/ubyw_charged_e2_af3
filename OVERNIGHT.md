@@ -7,8 +7,8 @@ risks are different, and each has a specific guard.
 
 | group | jobs | id |
 |---|---|---|
-| `k11species` | 5 species at K11: xisok, lyscontrol, charged, tetrahedral, product | `44db2930` |
-| `sites` | K5, K7, K21, K33, K35, K42, K45 (xisok) | `423495fb` |
+| `k11species` | 5 species at K11: xisok, lyscontrol, charged, tetrahedral, product | `8edd6e52` |
+| `sites` | K5, K7, K21, K33, K35, K42, K45 (xisok) | `14ad086f` |
 
 20 seeds x 5 samples = 100 models per job, 1200 total. **No database search:** all
 three MSA sets were already computed in earlier rounds and are grafted on, so the
@@ -92,3 +92,39 @@ the other six are **untested**, so they are a blind set. Rounds 1-5 were all
 negative and the prior is that reach does not predict reactivity. If the six
 untested sites split cleanly from K11 that is interesting; if they do not, it is
 the fourth consistent negative and worth accepting as an answer.
+
+
+## Third failure caught: the QC had dependencies the cluster does not have
+
+The `sites` group's first AF3 run **succeeded** — 101 CIFs, all 20 seeds, `rc=0` —
+and then the job died at the QC step. Cause: `qc_sweep.py` imported numpy, and the
+cluster's bare `python3` has neither numpy nor gemmi. Worse, the crash propagated
+out of `run_one` despite its `return 0`, so it killed the whole group after the
+expensive part had already worked.
+
+Checked both candidate interpreters: the AF3 container has numpy 2.1.3 but **no
+gemmi**, and the module-provided python has numpy but not gemmi either. Rather
+than fight that overnight, the QC is now **stdlib-only** — it parses the mmCIF
+`_atom_site` and `_struct_conn` blocks directly. AF3's layout is fixed, so this is
+straightforward, and it removes an entire class of overnight failure.
+
+Cross-validated against the gemmi version on the five validation models:
+**identical on every bond and geometry field.** That check was worth running — the
+first stdlib attempt reported `n_bonds=0` everywhere, because ligand partners
+carry `label_seq_id "."` (so `int()` failed) and the loop-vs-bare-key/value forms
+of `_struct_conn` need separate handling. Distances were right; connectivity was
+silently empty. Exactly the kind of quiet wrongness this project keeps producing.
+
+The QC's exit status is now swallowed as well, so a QC problem can never again
+destroy AF3 work that already succeeded.
+
+### Running tally of failures caught before they cost a night
+
+| # | failure | how it presented |
+|---|---|---|
+| 1 | `#SBATCH` block not first | exit 9, ran on the login node with no GPU |
+| 2 | `nvidia-smi` failure fatal | my own GPU-detection safeguard killed the job |
+| 3 | QC imported numpy/gemmi | crashed *after* 101 models were successfully written |
+
+All three were configuration, not chemistry. The chemistry was validated
+separately (Euler job `97505f31`) and is unchanged.
