@@ -1,0 +1,36 @@
+I0810 22:37:56.911766 23153590194176 xla_bridge.py:895] Unable to initialize backend 'rocm': module 'jaxlib.xla_extension' has no attribute 'GpuAllocatorConfig'
+I0810 22:37:56.940697 23153590194176 xla_bridge.py:895] Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+I0810 22:38:05.472262 23153590194176 pipeline.py:164] processing stub_sumo2_k11_xisok_ube2w, random_seed=1
+I0810 22:38:05.548848 23153590194176 pipeline.py:257] Calculating bucket size for input with 255 tokens.
+I0810 22:38:05.548979 23153590194176 pipeline.py:263] Got bucket size 256 for input with 255 tokens, resulting in 1 padded tokens.
+
+Running AlphaFold 3. Please note that standard AlphaFold 3 model parameters are
+only available under terms of use provided at
+https://github.com/google-deepmind/alphafold3/blob/main/WEIGHTS_TERMS_OF_USE.md.
+If you do not agree to these terms and are using AlphaFold 3 derived model
+parameters, cancel execution of AlphaFold 3 inference with CTRL-C, and do not
+use the model parameters.
+
+Found local devices: [CudaDevice(id=0)], using device 0: cuda:0
+Building model from scratch...
+Checking that model parameters can be loaded...
+
+Running fold job stub_sumo2_k11_xisok_ube2w...
+Output will be written in /cluster/scratch/schnpaul/ubyw/v2test/out/stub_sumo2_k11_xisok_ube2w
+Skipping data pipeline...
+Writing model input JSON to /cluster/scratch/schnpaul/ubyw/v2test/out/stub_sumo2_k11_xisok_ube2w/stub_sumo2_k11_xisok_ube2w_data.json
+Predicting 3D structure for stub_sumo2_k11_xisok_ube2w with 1 seed(s)...
+Featurising data with 1 seed(s)...
+Featurising data with seed 1.
+Featurising data with seed 1 took 2.80 seconds.
+Featurising data with 1 seed(s) took 7.36 seconds.
+Running model inference and extracting output structure samples with 1 seed(s)...
+Running model inference with seed 1...
+Running model inference with seed 1 took 48.84 seconds.
+Extracting output structure samples with seed 1...
+Extracting 1 output structure samples with seed 1 took 0.11 seconds.
+Running model inference and extracting output structures with 1 seed(s) took 48.95 seconds.
+Writing outputs with 1 seed(s)...
+Fold job stub_sumo2_k11_xisok_ube2w done.
+
+Done running 1 fold jobs.
