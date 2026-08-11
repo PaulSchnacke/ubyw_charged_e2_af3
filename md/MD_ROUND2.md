@@ -150,3 +150,38 @@ My recommendation is (1) for now and (2) only if the thioester state becomes the
 central question. The product (LYP) is genuinely usable and worth running, since
 it asks a well-posed classical question: once ubiquitin is attached, is the product
 complex stable, or does it fall apart?
+
+---
+
+## Walltime arithmetic, again
+
+Measured throughput on the real system: **111 ns/day** for 110,491 atoms on a
+TITAN RTX (K11 reached 1.2 ns in 16 min of production). That makes a 20 ns
+replicate **4.3 h**, and nine of them **~39 h** — against the 20 h limit I asked
+for. Only 4 of 9 would have survived; the rest would have been killed mid-run.
+
+This is the same mistake as the previous round, where three replicates were written
+to run sequentially inside one job whose walltime could not hold them. The fix is
+the same, and it is legitimate rather than a shortcut: **replicates are independent
+by construction.** Each starts from the same equilibrated restart with `ntx=1`
+(velocities re-drawn from a Maxwell-Boltzmann distribution) and `ig=-1` (fresh
+random seed), so running them concurrently on separate GPUs is the identical
+calculation, not an approximation of it.
+
+Current layout — nine replicates across five jobs:
+
+| job | contents | projected |
+|---|---|---|
+| `efb38961` (original) | K11 rep1 | running |
+| `d3df3553` | K11 rep2 | 4.3 h |
+| `e157245e` | K11 rep3 | 4.3 h |
+| `863953c7` | K21: prep + equilibrate + 3 × 20 ns | ~13 h |
+| `ffe7def4` | Control: prep + equilibrate + 3 × 20 ns | ~13 h |
+
+K11's equilibrated restart already existed on scratch, so its extra replicates
+start immediately; K21 and the control carry their own prep and equilibration
+(~16 min each, measured).
+
+**The lesson worth keeping:** measure ns/day on the actual system before choosing a
+walltime. The estimate that mattered was not available until 16 minutes of
+production had run, and it was 2× off the guess implied by the original submission.
