@@ -82,15 +82,41 @@ No topology is written. Unlike AF3 silently discarding a polymer–polymer bond,
 unlike `parmchk2` quietly emitting zero force constants, a missing inter-chain bond
 parameter **cannot reach a trajectory**. That is worth knowing for its own sake.
 
-## Outstanding: is the bond physically active?
+## CONFIRMED: the bond is real in the topology
 
 tleap accepting a topology is not proof the bond does anything — that distinction
-has cost this project real time. The test running now builds the same linked system
-with the two chains translated **25 Å apart** and minimises: a genuine `C–S` term
-must pull them back to ~1.81 Å.
+has cost this project real time. So rather than trust the exit status, the bond was
+read straight out of `link.parm7`:
 
-A first attempt at this returned `NaN`, traced to **my test geometry, not the
+```
+bonds involving SG (atom 46):
+  C(21)  - SG(46)    k = 199.66 kcal/mol/Å²   r_eq = 1.8104 Å   <- the thioester
+  SG(46) - CB(43)    k = 227.00 kcal/mol/Å²   r_eq = 1.8100 Å   <- Cys side chain
+```
+
+The sulfur carries **both** its bonds — to the cysteine Cβ and to the acyl carbon —
+which is precisely a thioester. The force constant is non-zero, where the earlier
+failure mode showed `k = 0.00`.
+
+**What this does and does not establish.** It proves the transfer worked
+mechanically: the GAFF2 value reached the topology and applies to the intended atom
+pair across two chains. It does not independently validate 199.66 as the correct
+force constant for this chemistry — that is GAFF2's published `c–ss` value, so the
+result is exactly as defensible as GAFF2 is, which for a thioester is the standard
+choice.
+
+A minimisation test is also queued (chains translated **25 Å apart**, which a
+genuine term must pull back to ~1.81 Å) as dynamic confirmation, but the topology
+read already answers the question.
+
+A first minimisation attempt returned `NaN`, traced to **the test geometry, not the
 parameters**: tleap's `combine` stacked the two fragments on top of each other
 (`1-4 VDW = 6267` at step 1, `NaN` in `VDWAALS`/`EEL`, while `BOND`, `ANGLE` and
 `DIHED` were all finite and sane). Translating one fragment away first removes the
-overlap and makes the test stronger.
+overlap.
+
+## Bottom line
+
+The inter-chain thioester is **buildable now**. Reading the topology should have been
+the first check rather than the last — it is instant, needs no queue, and answers the
+question that tleap's exit status does not.
