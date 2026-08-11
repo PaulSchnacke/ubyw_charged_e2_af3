@@ -196,11 +196,23 @@ def analyse_model(path, variant):
 
 
 def load_conf(model_path):
-    """Match a model CIF to its summary_confidences JSON."""
-    base = model_path.replace("_model.cif", "")
-    for cand in (base + "_summary_confidences.json",
-                 os.path.join(os.path.dirname(model_path), "summary_confidences.json")):
-        if os.path.exists(cand):
+    """Match a model CIF to its summary_confidences JSON.
+
+    Two layouts, both of which occur:
+      * AF3's own tree      <job>/seed-N_sample-M/{model.cif, summary_confidences.json}
+      * the flattened harvest  <job>__seed-N_sample-M__model.cif  and
+                               <job>__seed-N_sample-M__summary_confidences.json
+    Note the flattened form replaces "model.cif" WITHOUT an extra underscore, so
+    stripping "_model.cif" and re-appending "_summary..." misses by one character --
+    which silently produced empty iptm/ptm columns on the first run.
+    """
+    cands = [
+        model_path.replace("__model.cif", "__summary_confidences.json"),
+        model_path.replace("_model.cif", "_summary_confidences.json"),
+        os.path.join(os.path.dirname(model_path), "summary_confidences.json"),
+    ]
+    for cand in cands:
+        if cand != model_path and os.path.exists(cand):
             try:
                 return json.load(open(cand))
             except Exception:
