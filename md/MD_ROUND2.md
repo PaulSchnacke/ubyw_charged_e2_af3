@@ -89,3 +89,64 @@ frames inside 4 Å. If K11 and K21 now differ in how long they hold, that is a
 dynamic signal AF3's static reach metric could not see — and the reach metric was
 anti-predictive (K11 ranked 7th of 8), so there is room for MD to say something
 different rather than merely confirm it.
+
+---
+
+## Update: the hard residues, and why "tleap accepted it" is not a pass
+
+All three parameterised, and all three would have run. Two of them should not.
+
+| residue | antechamber | prepgen | tleap | net charge | ATTN terms | **verdict** |
+|---|---|---|---|---|---|---|
+| **LYP** (product) | ok | 47 atoms | OK | −0.000002 | **0** | **usable** |
+| LYT (thioester) | ok | 18 atoms | OK | 0.000000 | 6 | **NOT usable** |
+| LYX (tetrahedral) | ok | 22 atoms | OK | 0.000001 | 3 | **NOT usable** |
+
+Every signal we had said all three were fine: AM1-BCC charges assigned, integer
+residue charge, tleap built a test peptide and reported `Total unperturbed charge:
+0.000000`. That is a misleading pass.
+
+`parmchk2` flagged terms as `ATTN, need revision` and set each one to a force
+constant of **zero**. For LYT, all six are the thioester itself:
+
+```
+BOND   C -S        k = 0.000     <- the thioester bond
+ANGLE  C -S -CT    k = 0.000
+ANGLE  O -C -S     k = 0.000
+ANGLE  CT-C -S     k = 0.000
+DIHE   O -C -S -CT k = 0.000     <- rotation about C-S
+DIHE   CT-C -S -CT k = 0.000
+```
+
+Zero force constant means **no restoring force**. The C–S bond has no equilibrium
+length, rotation about it is free, and there is nothing holding the carbonyl in
+plane. LYX is the same story at the tetrahedral carbon: `OH-CT-S`, `NT-CT-S` and
+`NT-CT-OH` are the angles that *define* the sp3 centre, and all three are zero, so
+it can flatten or invert without penalty.
+
+A trajectory on either residue would run to completion and produce numbers that
+describe nothing. This is the same class of failure as the AF3 polymer-bond drop:
+exit 0, plausible output, silently meaningless.
+
+`check_frcmod_attn.py` is now the gate. It fails when any zero-force-constant
+guessed term involves an atom of the reactive centre, and it was verified on the
+real files: LYP passes with 0 ATTN, LYT fails naming all six terms.
+
+### What this means for the two intermediates
+
+The thioester and tetrahedral states **cannot be measured by classical MD** with
+transferable parameters, which was the risk flagged before running. Options, in
+order of cost:
+
+1. **Accept the limitation.** The charged state's behaviour is not answerable this
+   way, and AF3's 338.6° pyramidalisation already suggested it has no clean answer
+   either.
+2. **QM-derived parameters** for the thioester (a Hessian-based fit at, say,
+   B3LYP/6-31G* on the model compound). Days of work, and defensible.
+3. **QM/MM**, treating the reactive centre quantum-mechanically. The correct
+   method for a bond-forming question, and a substantially larger project.
+
+My recommendation is (1) for now and (2) only if the thioester state becomes the
+central question. The product (LYP) is genuinely usable and worth running, since
+it asks a well-posed classical question: once ubiquitin is attached, is the product
+complex stable, or does it fall apart?
