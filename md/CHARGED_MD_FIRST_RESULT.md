@@ -64,3 +64,55 @@ TYR96, B ends CYS151).
 Error 4 now has a permanent guard: `prepare_charged.py` asserts the fused residue's
 heavy-atom set equals what `lyq.prep` declares, so a rename in either place fails
 locally instead of on the cluster.
+
+
+---
+
+# Production, 11.1 ns of replicate 1: the nucleophile stays engaged
+
+Analysis of the running trajectory (222 frames at 50 ps, verified against the mdin).
+
+| observable | first | mean | final quarter | reading |
+|---|---|---|---|---|
+| thioester C–S | 1.81 Å | **1.81 ± 0.04 Å** | 1.81 Å | rock stable at GAFF2's 1.8104 Å |
+| O=C–S angle | 125.4° | **124.1°** | 124.4° | sp² planar throughout |
+| attack N(I)→acyl C | 3.87 Å | 3.67 Å | **3.39 Å** | **tightens**; 176/222 frames (79%) ≤4 Å |
+| SUMO2 Cα RMSD | 0 | 2.67 Å | 3.05 Å | settles, no unfolding |
+| Ub Cα RMSD | 0 | 0.90 Å | 1.10 Å | ubiquitin very rigid |
+
+## The comparison that matters
+
+| | apo (stopped runs) | charged (this run) |
+|---|---|---|
+| final attack distance | **7.4 ± 0.3 Å** | **3.39 Å** |
+| frames ≤4 Å | **0 / 1200** | **176 / 222 (79%)** |
+
+The apo complex relaxed away from attack geometry and never returned. With ubiquitin
+bonded, the nucleophile *closes* on the acyl carbon instead. Ubiquitin's presence is
+the entire difference — removing it did not simplify the system, it removed the
+interaction being measured.
+
+## Two things this does and does not show
+
+**Does:** the force field reproduces thioester chemistry AF3 cannot. The acyl carbon
+stays planar at 124° across 11 ns where AF3 pyramidalised the same carbon to
+338.6 ± 1.7° total angle. The bond neither stretches nor drifts.
+
+**Does not:** show reactivity. With fixed connectivity, classical MD cannot model the
+transfer. What it measures is whether the geometry required for transfer *persists* —
+and here it does, for one site, in one replicate.
+
+## The cautious panel
+
+Native contacts fall to ~41% (substrate–enzyme) and ~44% (ubiquitin–enzyme) of their
+starting values. Two reasons not to read that as dissociation, and one reason to watch
+it:
+
+* the reference frame is the **unrelaxed AF3 pose**, so a large early drop is expected
+  as an idealised prediction settles into solvent;
+* the substrate interface is **flat** after that initial settling (mean 371 vs final
+  quarter 388 pairs) — settled, not leaving;
+* but the **ubiquitin interface is still declining** (mean 804 vs final quarter 656).
+  If that continues in the full 20 ns × 3 replicates, the engaged geometry may be
+  transient. That is exactly the question production answers, and it is why the
+  replicates matter rather than this single partial run.
