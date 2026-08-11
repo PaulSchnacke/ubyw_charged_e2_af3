@@ -185,3 +185,80 @@ start immediately; K21 and the control carry their own prep and equilibration
 **The lesson worth keeping:** measure ns/day on the actual system before choosing a
 walltime. The estimate that mattered was not available until 16 minutes of
 production had run, and it was 2× off the guess implied by the original submission.
+
+---
+
+## STOPPED: the running systems could not answer the question asked
+
+All five jobs were cancelled at Paul's instruction, correctly. The setup was wrong
+in a way that my own writeup obscured.
+
+**The three running systems contained no ubiquitin at all.** Verified from the
+input files:
+
+| system | chains | ubiquitin |
+|---|---|---|
+| `k11_xisok` | SUMO2, UBE2W, XisoK ligand | **no** |
+| `k21_xisok` | SUMO2, UBE2W, XisoK ligand | **no** |
+| `k11_lyscontrol` | SUMO2, UBE2W | **no** |
+| `k11_charged` | SUMO2, UBE2W, XisoK, **Ub**, Gly tail | yes — not run |
+| `k11_tetrahedral` | SUMO2, UBE2W, XisoK, **Ub**, Gly tail | yes — not run |
+| `k11_product` | SUMO2, UBE2W, XisoK, **Ub** | yes — not run |
+
+The request was MD on the thioester intermediate and the product — states *defined*
+by ubiquitin being present. What was running was the apo complex, described as "the
+three force-field-ready systems", which hid the omission behind a parameterisation
+detail. Ubiquitin is 76 residues and its C-terminal tail occupies the same groove
+the XisoK amine must reach into, so removing it removes the steric competition that
+makes the measurement meaningful.
+
+### Correcting my own overstatement about the thioester
+
+I wrote that the thioester "cannot be measured by classical MD". Two claims were
+conflated, and only one is true.
+
+**True and general:** a classical force field has fixed connectivity, so it can
+never show the transfer *happening* — no bond breaks, none forms.
+
+**Overstated:** that the charged state is therefore unmeasurable. It is not. MD can
+legitimately ask whether the nucleophile stays positioned for attack while
+ubiquitin is held on the enzyme. What blocked that was **our missing parameters**,
+not the method — and acyl-enzyme and acyl-CoA thioester intermediates have been
+simulated extensively in the literature, so published parameters very likely exist.
+I asserted the limitation without searching for them.
+
+Worth being precise about what `parmchk2`'s zeros actually do, because "approximate"
+undersells it. A bond term with `k = 0.000` and `r_eq = 0.000` contributes zero
+energy at every separation, and Amber excludes 1-2 bonded pairs from nonbonded
+interactions — so the acyl carbon and the sulfur would have felt **no force of any
+kind** from each other. Ubiquitin would have diffused off the enzyme while the run
+exited cleanly.
+
+### Assets preserved on the cluster — nothing needs redoing
+
+| file | state |
+|---|---|
+| `lyq.prep`, `lyq.frcmod` | isopeptide residue, re-validated (integer charge, ALY agreement, NI at −0.88 e) |
+| `k11_xisok.parm7`, `.eq.rst7` | solvated and fully equilibrated |
+| `k21_xisok.parm7`, `.eq.rst7` | solvated and fully equilibrated |
+| `LYP.prep`, `LYP.frcmod` | product residue, **0 ATTN** |
+| `check_frcmod_attn.py` | the zero-force-constant gate |
+| ~112 MB partial trajectories | on scratch |
+
+The equilibrated apo systems remain useful as a baseline if the ubiquitin-containing
+runs ever need one.
+
+### Options, cheapest first
+
+1. **Product (`LYP`) only** — ready now, contains ubiquitin, 0 ATTN. Asks a
+   well-posed classical question: once Ub is attached, does the complex hold?
+2. **Search for published thioester parameters**, then run charged + product
+   together. This is the state originally requested and the check I should have run
+   before declaring it out of reach.
+3. **Restrained thioester** — hold Gly76 C to Cys91 SG at ~1.8 Å via `nmropt`.
+   Keeps ubiquitin's bulk without new bonded terms; constrains the distance but not
+   the angles or the charges at the reactive centre.
+4. **QM-derived parameters** (Seminario from a B3LYP Hessian, plus RESP charges) —
+   days of work, fully defensible.
+
+Nothing runs until Paul chooses.
