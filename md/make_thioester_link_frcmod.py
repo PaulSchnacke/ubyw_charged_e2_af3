@@ -36,7 +36,12 @@ import sys
 # ff19SB does NOT use CT for every sp3 carbon: the test showed tleap asking for
 # XC-C-S, because ff19SB gives the alpha carbon type XC. Any sp3 carbon that can
 # neighbour the linkage needs its own angle, so emit the GAFF2 c3 value for each.
-SP3 = ("CT", "XC", "2C", "3C")
+# ff19SB does NOT use one sp3 carbon type. Discovered the hard way, one failed
+# tleap run per missing type: it asked for XC-C-S, then S-C-CX. CX is the
+# alpha carbon of a residue in a CMAP-enabled context; CT/2C/3C cover the rest.
+# Emitting all of them costs nothing (an unused frcmod line is inert) and stops the
+# discover-one-type-per-job loop.
+SP3 = ("CT", "XC", "CX", "2C", "3C")
 WANT = [("c -ss", "C -S", "BOND"),
         ("o -c -ss", "O -C -S", "ANGLE")]
 WANT += [("c3-c -ss", f"{x:<2s}-C -S", "ANGLE") for x in SP3]

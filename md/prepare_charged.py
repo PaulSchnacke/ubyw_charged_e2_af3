@@ -38,8 +38,16 @@ import sys
 import gemmi
 
 # XisoK ligand -> LYQ, the isopeptide residue already charge-validated against ALY.
+# Must match the atom names lyq.prep DECLARES, or tleap reports
+# "Atom .R<LYQ 12>.A<CL 41> does not have a type" -- which is what happened when
+# these were written CL/CM. Verified against prep_lyq.sh's output:
+#   N H CA CB CG CD CE NZ CH OH CI NI HI1 HI2 CJ CK CM1 ... CM2 ... C O
 LIG2LYQ = {"C01": "CH", "O01": "OH", "C02": "CI", "N01": "NI",
-           "C03": "CJ", "C04": "CK", "C05": "CL", "C06": "CM"}
+           "C03": "CJ", "C04": "CK", "C05": "CM1", "C06": "CM2"}
+# Heavy atoms the LYQ residue definition provides. Checked at runtime so a rename in
+# either place fails here rather than inside tleap.
+LYQ_HEAVY = {"N","CA","C","O","CB","CG","CD","CE","NZ",
+             "CH","OH","CI","NI","CJ","CK","CM1","CM2"}
 
 # UBGG dipeptide ligand -> two standard glycines.
 UBGG2GLY = {75: {"N1": "N", "CA1": "CA", "C1": "C", "O1": "O"},
@@ -140,6 +148,25 @@ def main(cif, out, *flags):
         print(f"  peptide bond {prev.seqid.num}.C-{num}.N = {dd:.2f} A")
         prev = cur
 
+    # The thioester glycine is NOT a free C-terminus: its carbonyl carbon is bonded
+    # to the cysteine sulfur. Leaving a terminal OXT there makes tleap give the
+    # carbon a carboxylate oxygen (type O2) on top of the thioester, producing
+    # "Could not find angle parameter for atom types: S - C - O2" and five bonds on
+    # one carbon. Amber infers the terminus from the presence of OXT, so removing it
+    # is what tells tleap this residue is acylated rather than terminal.
+    thio_gly = [r for r in ub if r.seqid.num == keep[-1]][0]
+    for nm in ("OXT", "OT2"):
+        if thio_gly.find_atom(nm, "*") is not None:
+            thio_gly.remove_atom(nm, "\0", gemmi.Element("X"))
+            print(f"  removed {nm} from GLY{keep[-1]} (carries the thioester)")
+
+    # Verify the fused LYQ carries exactly the atoms its residue definition declares.
+    got = {a.name for a in target}
+    if got != LYQ_HEAVY:
+        sys.exit(f"LYQ atom mismatch: missing {sorted(LYQ_HEAVY - got)}, "
+                 f"unexpected {sorted(got - LYQ_HEAVY)}")
+    print(f"  LYQ atom names match the residue definition ({len(got)} heavy atoms)")
+
     # ---- 3. the thioester: measure it before writing anything ------------------
     cys = [r for r in chains[ENZ_CHAIN] if r.seqid.num == CATALYTIC_CYS]
     if len(cys) != 1 or cys[0].name != "CYS":
@@ -157,6 +184,17 @@ def main(cif, out, *flags):
     for name in (LIG_CHAIN, GLY_CHAIN):
         model.remove_chain(name)
     st.setup_entities()
+
+    # tleap maps the LAST residue of a chain to its charged C-terminal variant
+    # (GLY -> CGLY), which carries a carboxylate oxygen of type O2. That is why
+    # "Could not find angle parameter for atom types: S - C - O2" survived removing
+    # OXT from the coordinates: the variant is chosen from chain POSITION, not from
+    # which atoms are present. Chain U is the only chain ending in GLY (A ends TYR96,
+    # B ends CYS151), so overriding the C-terminal GLY mapping is surgical.
+    with open(out + ".resmap", "w") as fh:
+        fh.write("# emitted by prepare_charged.py; source before loadpdb\n"
+                 "addPdbResMap { { 1 \"GLY\" \"GLY\" } { 0 \"GLY\" \"GLY\" } }\n")
+    print(f"  wrote {out}.resmap (keeps the thioester GLY neutral, not CGLY)")
 
     st.write_pdb(out)
     remaining = [ch.name for ch in st[0]]

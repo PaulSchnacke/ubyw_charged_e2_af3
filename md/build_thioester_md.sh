@@ -54,9 +54,18 @@ EOF
 cat > build_${TAG}.in <<EOF
 source leaprc.protein.ff19SB
 source leaprc.water.opc
+# Keep the thioester glycine NEUTRAL. Without this tleap applies the charged
+# C-terminal variant (GLY -> CGLY) to the last residue of chain U and gives its
+# carbonyl a carboxylate oxygen (type O2) alongside the thioester sulfur -- five
+# bonds on one carbon, and "Could not find angle parameter for S - C - O2".
+# Emitted by prepare_charged.py so the two cannot drift apart.
+addPdbResMap { { 1 "GLY" "GLY" } { 0 "GLY" "GLY" } }
 loadamberparams thioester_link.frcmod
-loadamberparams frcmod.lyq
-loadoff lyq.lib
+# prep_lyq.sh writes lyq.frcmod + lyq.prep (a PREP file, loaded with loadamberprep).
+# It does NOT write a .lib/.off -- an earlier gate looked for frcmod.lyq/lyq.lib and
+# aborted a job in which LYQ had in fact validated perfectly.
+loadamberparams lyq.frcmod
+loadamberprep lyq.prep
 
 sys = loadpdb ${PDB}
 
