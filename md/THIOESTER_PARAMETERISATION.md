@@ -1,13 +1,14 @@
 # Parameterising the Ub–UBE2W thioester for Amber MD
 
 **Question for you:** we need a covalent thioester between ubiquitin Gly76 and the
-UBE2W catalytic Cys91 in an Amber ff19SB/OPC simulation. Have you done this, and is
-the approach below the one you'd use?
+UBE2W catalytic Cys91 in an Amber ff19SB/OPC simulation. The mechanical problem is
+now solved — but three judgement calls remain that we'd rather not guess at, and
+they decide whether the result is defensible. Those are at the end.
 
-Short version: our first attempt produced a residue that Amber accepted and would
-have silently simulated as **two unconnected fragments**. We've since found the
-likely cause and a candidate fix, but would rather have your opinion than run
-another 13 GPU-hours on a guess.
+Short version of the episode, since the failure mode is worth knowing about: our
+first attempt produced a residue that Amber accepted and would have silently
+simulated as **two unconnected fragments**. Cause was our own atom-type choice, not
+a gap in the force field.
 
 ---
 
@@ -76,20 +77,48 @@ features we need, and both exist already.
 
 So this looks like our error rather than a genuine gap in the force field.
 
-## Our candidate approach — does this match yours?
+## Resolved: it was the atom-type flag
 
-1. Re-run `antechamber` with **`-at gaff2`** on the model compound so the thioester
-   atoms get `c` / `ss` types, then `parmchk2 -s gaff2`. Expect 0 ATTN.
+Re-running `antechamber` with **`-at gaff2`** instead of `-at amber` fixes it
+completely. Confirmed on the cluster:
+
+| | sulfur type | acyl carbon | `C–S` in the parameter set? |
+|---|---|---|---|
+| `-at amber` | `S` (protein) | `C` | **no** → 6 zero-force-constant terms |
+| `-at gaff2` | `ss` (thioether) | `c` | **yes** |
+
+The GAFF2 `frcmod` contains **no sulfur terms at all**, and that is the success
+signal rather than a failure: `parmchk2` only emits terms it has to *guess*. `c–ss`,
+`o–c–ss`, `c3–c–ss` and `c–ss–c3` are absent from the frcmod precisely because
+`gaff2.dat` already defines them —
+
+```
+BOND   c -ss     237.9 kcal/mol/Å²   1.8000 Å
+ANGLE  o -c -ss   63.0              123.32°     <- sp2 carbonyl
+ANGLE  c3-c -ss   61.5              113.51°
+ANGLE  c -ss-c3   60.9               99.16°
+```
+
+Everything the frcmod *does* contain is nitrogen (`ns`, `n8`) with **penalty score
+0.0** — exact analogues of existing amide and amine terms. None is
+zero-force-constant. So the thioester needs no new parameters at all.
+
+## Remaining approach — does this match yours?
+
+1. `antechamber -at gaff2` → `parmchk2 -s gaff2` (**done, 0 problematic terms**).
 2. Keep the **backbone** at ff19SB protein types and let only the side chain carry
    GAFF2 types — the usual mixed-type modified-residue construction.
 3. `prepgen` to excise the caps and force integer charge (this worked fine already).
 4. Gate on ATTN before running anything: we now refuse any residue with a
    zero-force-constant term at the reactive centre (`check_frcmod_attn.py`).
 
-**Specific things we'd value your view on:**
+**The three things we'd genuinely value your view on** — these are judgement
+calls, not blockers:
 
 * **Mixing ff19SB and GAFF2 types in one residue** — is that acceptable here, or do
-  you use a different convention for the acyl-enzyme linkage?
+  you use a different convention for the acyl-enzyme linkage? This is the one we're
+  least sure about: the backbone needs ff19SB (CMAP), but the thioester needs GAFF2,
+  and they meet two bonds apart.
 * **Charges.** AM1-BCC on a capped model compound, or RESP from a HF/6-31G* ESP?
   For a charge-separated thioester near a catalytic site we suspect AM1-BCC may be
   too crude, but don't want to over-engineer.
@@ -98,10 +127,8 @@ So this looks like our error rather than a genuine gap in the force field.
   spanning both (and lose tleap's ability to treat them as separate chains), or
   create the bond in tleap with an explicit `bond` command after loading both, using
   a modified CYS with the acyl group?
-* **Whether a restraint is defensible instead.** If proper parameters are a lot of
-  work, would you accept an `nmropt` distance restraint holding Gly76 C to Cys91 Sγ
-  at 1.81 Å? It keeps ubiquitin's bulk in the active site — the part we actually
-  need — but doesn't constrain the angles or the charge distribution.
+(We've dropped the earlier question about whether a distance restraint would be
+acceptable — with real `c–ss` parameters in hand there's no need to approximate.)
 
 ## Context on why the thioester is the whole point
 
@@ -114,8 +141,9 @@ chance.
 We also asked AF3 to model the charged state directly. It has no thioester
 chemistry: the acyl carbon came out at a bond-angle sum of **338.6 ± 1.7°**, between
 planar sp² (360°) and tetrahedral sp³ (328.5°), despite correct sp2 hybridisation in
-the input. That's why we want a force field — it has an explicit 6.2 kcal/mol
-barrier holding the thioester planar, which AF3 does not.
+the input. That's why we want a force field — GAFF2 has an explicit
+barrier about `c–ss` holding the thioester planar and an `o–c–ss` equilibrium of
+123.32°, neither of which AF3 respects.
 
 MD without the thioester is pointless: with ubiquitin absent, the active-site groove
 the nucleophile has to reach into is empty, so the steric competition that decides
@@ -131,4 +159,7 @@ the outcome is missing. We ran three such systems by mistake and stopped them.
   both linkages are ordinary amides.
 * Two systems solvated and fully equilibrated, ~111 ns/day throughput measured.
 
-Only the thioester is blocking.
+The thioester is no longer blocking. What we'd like from you is a sanity check on
+the three points above before we spend the GPU time, since getting the charge model
+or the type-mixing wrong would produce a trajectory that looks fine and means
+nothing — which is exactly the trap we just climbed out of.
