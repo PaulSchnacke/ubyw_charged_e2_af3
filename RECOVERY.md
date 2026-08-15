@@ -23,10 +23,37 @@ All write their real results into **`$HOME`** on Euler, never scratch:
 
 * MSAs → `~/ubyw_uba1_msa/msa_donor_ub{76,75,74}_data.json` (**complete**)
 * production models → `~/ubyw_uba1_models/<job>/<job>__seed-N_sample-M__model.cif`,
-  harvested per variant **as each finishes**; a variant with ≥100 models already present
-  is skipped on re-run, so a kill costs at most the one variant in flight
+  harvested per variant **as each finishes**, so a kill costs at most the one variant in
+  flight
+
+> **Resume threshold — read before re-running.** AF3 writes **5 samples per seed**, so
+> 25 seeds = **125 models** per variant, not 100. The submitted script's skip test is
+> `-ge 100`, which would treat a variant harvested at 100 models (20 seeds) as complete
+> and silently leave it 20% short. This does **not** affect the current run — nothing was
+> pre-existing, so nothing was skipped — but **any re-run must use `-ge 125`**, or
+> better, delete the incomplete variant's directory and let it rebuild. Check with:
+> ```
+> for d in ~/ubyw_uba1_models/uba1_*; do echo "$(basename $d) $(ls $d/*.cif|wc -l)/125"; done
+> ```
+> A variant showing anything other than 125 is incomplete regardless of what the job's
+> exit status said.
 * only logs and a `MANIFEST.txt` transfer back — 1200 CIFs would be far too much, and an
   oversized transfer has previously made a job that *succeeded* report failure
+
+## State as of the last check (2026-08-15, ~15:50)
+
+| | |
+|---|---|
+| MSAs | **complete**, 110-111 MB each, in `~/ubyw_uba1_msa/` |
+| batches 1-3 | **running**, ~1 h elapsed, **~21.8 h walltime remaining** each |
+| batch 4 (`309c38e2`) | **queued**, blocked on `QOSMaxGRESPerUser` — normal, it starts as a slot frees |
+| models harvested | 0 so far (first variant of each batch still in inference) |
+| home quota | 20.2 GB of 45 GB soft — 1200 CIFs will not threaten it |
+
+Walltime headroom is the number that matters overnight: ~21.8 h remaining against a job
+that needs roughly 3 × 25 × 9 min ≈ 11 h. Comfortable, but if a batch does hit the wall,
+the per-variant harvest means the finished variants are already safe in `$HOME` and only
+the one in flight is lost.
 
 ## Why a VPN drop is safe
 
@@ -111,6 +138,35 @@ Gated on the stub being clean *and* the MSAs existing. Sequence:
    one name — and a failing `cp` exit status has previously stopped the remaining
    variants. Return 0 unconditionally from the harvest and detect
    already-complete variants so they are harvested rather than recomputed.
+
+## When the models land — the pipeline is already built and tested
+
+Both scripts were written and run against the stub output, so they are known to work
+before real data arrives. On the cluster (stdlib only, no numpy/gemmi needed):
+
+```bash
+python qc_uba1.py ~/ubyw_uba1_models qc_uba1.csv
+```
+
+Then locally, where pandas/matplotlib are available:
+
+```bash
+python analyse_uba1.py qc_uba1.csv results_uba1/
+```
+
+`qc_uba1.py` records `acyl_source` on every row and **raises** on an unrecognised layout
+rather than falling back — the failure that made `analyse_ub75.py` report a thioester at
+6.80 Å where the truth was 1.68 Å. `analyse_uba1.py` prints the AUC direction in the same
+breath as the number, prints the condition count and measured ICC beside the model count,
+and reports medians with bootstrap CIs and fraction-within-cutoff rather than minima.
+
+Sanity checks to run on the QC output **before** interpreting anything:
+
+* `acyl_source` distribution matches the job types — 4 variants should show
+  `UBGG:C2`/`UBG1:C1` (the covalent thioester jobs), the other 8 `protein_Cterm:*`;
+* `cys632_is_cys` true in every row;
+* declared thioester present in ~100% of covalent models, planarity near 357-360°;
+* 125 models per variant.
 
 ## Local state, if the workspace is swept
 
