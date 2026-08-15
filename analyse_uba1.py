@@ -32,6 +32,7 @@ independent replicates when the experimental unit is the site. So:
 Usage: python analyse_uba1.py QC.csv OUTDIR
 """
 import os
+from math import comb
 import sys
 
 import matplotlib
@@ -163,6 +164,29 @@ def main(qc_csv, outdir):
             deff = 1 + (m - 1) * icc
             print(f"  {site}: ICC = {icc:.2f}, design effect = {deff:.1f} -> "
                   f"{len(sub)} models carry ~{len(sub)/deff:.0f} observations' worth")
+
+    # THE DESIGN FLOOR. State this BEFORE quoting any p-value. It is a property of the
+    # experiment, not of the data: with k conditions of which p are 'positive', a
+    # permutation test at the condition level has only C(k,p) distinct label assignments,
+    # so the smallest attainable one-sided p is 1/C(k,p). A perfect, flawless separation
+    # cannot beat it. Round 2 of this project reported p = 0.004 from a design whose
+    # floor was 0.5, which is what makes this worth printing every time.
+    print("\n  DESIGN FLOOR -- the smallest p this comparison could possibly reach:")
+    for site in sorted(df.site.unique()):
+        sub = df[df.site == site]
+        for e2 in (False, True):
+            s = sub[sub.with_ube2w == e2]
+            k = s.groupby("tail_len").ngroups
+            if k < 2:
+                continue
+            # one tail length is the 'positive' (the working construct)
+            floor = 1.0 / comb(k, 1)
+            tag = "with UBE2W" if e2 else "no UBE2W"
+            print(f"    {site:5s} {tag:11s} {k} tail lengths, 1 positive -> "
+                  f"C({k},1) = {comb(k,1)} assignments -> floor p = {floor:.2f}")
+    print("    So a condition-level test on 2 tail lengths CANNOT reach significance at")
+    print("    all: the comparison is descriptive (effect size and its CI), not inferential.")
+    print("    Any small p you see elsewhere for this design came from counting models.")
 
     # ---- the differential contact map: the mechanistic answer --------------
     print("\n" + "=" * 74)
