@@ -53,9 +53,17 @@ def main(new_job, donor, out):
                  f"{sorted(len(x) for x in pool)} -- refusing to write a job with "
                  f"partial alignments")
 
-    # the things that must survive the graft
-    assert d.get("userCCD") or not any("ligand" in s for s in d["sequences"]), \
-        "ligand present but userCCD lost"
+    # The things that must survive the graft. Only CUSTOM ligands need a userCCD:
+    # standard components (ATP, MG, ...) resolve from AF3's own CCD and legitimately
+    # carry none. The earlier form of this assertion required a userCCD whenever ANY
+    # ligand was present, so it aborted every ATP/Mg adenylation job -- a gate failing
+    # a correct job, the same class as the frcmod-filename check that once killed a
+    # passing build. A guard whose premise is wrong is worse than no guard.
+    STANDARD_CCD = {"ATP", "ADP", "AMP", "MG", "ZN", "GTP", "GDP", "SO4", "PO4", "GOL"}
+    custom = [s["ligand"]["ccdCodes"][0] for s in d["sequences"]
+              if "ligand" in s and s["ligand"]["ccdCodes"][0] not in STANDARD_CCD]
+    assert d.get("userCCD") or not custom, \
+        f"custom ligand(s) {custom} present but userCCD lost"
     nb = len(d.get("bondedAtomPairs", []))
 
     json.dump(d, open(out, "w"), indent=1)
