@@ -4,17 +4,29 @@ Written 2026-08-15 while two jobs were live on Euler. **Nothing below depends on
 session that submitted them.** Slurm owns the jobs; a dropped VPN, a closed laptop or a
 dead kernel cannot affect them.
 
-## The two live jobs
+## Live jobs
 
-| Slurm/host job id | what | resource | expect |
-|---|---|---|---|
-| `f2ea3a80-9f4e-4a55-8e7d-a6182639ab3b` | stub chemistry validation, 3 jobs × 1 seed | 1 GPU, `gpu.4h`, 40 GB gpumem | ~30 min total |
-| `4e124915-df3a-4770-bc16-3ec6bba631dc` | MSA search, 3 donor sets (UBA1 is new) | 8 CPU, `normal.24h` | 12-20 h |
+**DONE** — `f2ea3a80` (stub validation) and `4e124915` (MSA search) both succeeded.
+Findings in [STUB_RESULTS.md](STUB_RESULTS.md); MSAs complete in `~/ubyw_uba1_msa/`.
 
-Both write their real results into **`$HOME`** on Euler, never scratch:
+**RUNNING** — production inference, 12 jobs × 25 seeds, split into 4 parallel batches
+(sequential replicates in one job has twice exceeded walltime in this project):
 
-* MSAs → `~/ubyw_uba1_msa/msa_donor_ub{76,75,74}_data.json`
-* stub models + logs → returned to the workspace, and also under the job workdir
+| job id | batch | jobs |
+|---|---|---|
+| `afeb8aec-769d-4154-b6a3-383a1eca64fc` | 1/4 | `aden_ub75_no_ube2w`, `cys_ub75_no_ube2w`, `thio_ub75_no_ube2w` |
+| `4ad60257-502f-49a2-a601-6c0e8718f3b1` | 2/4 | `aden_ub75_with_ube2w`, `cys_ub75_with_ube2w`, `thio_ub75_with_ube2w` |
+| `25e500e4-b6e2-4d6e-8bea-d50e99b25269` | 3/4 | `aden_ub76_no_ube2w`, `cys_ub76_no_ube2w`, `thio_ub76_no_ube2w` |
+| `309c38e2-4436-4545-a974-142ab1764d27` | 4/4 | `aden_ub76_with_ube2w`, `cys_ub76_with_ube2w`, `thio_ub76_with_ube2w` |
+
+All write their real results into **`$HOME`** on Euler, never scratch:
+
+* MSAs → `~/ubyw_uba1_msa/msa_donor_ub{76,75,74}_data.json` (**complete**)
+* production models → `~/ubyw_uba1_models/<job>/<job>__seed-N_sample-M__model.cif`,
+  harvested per variant **as each finishes**; a variant with ≥100 models already present
+  is skipped on re-run, so a kill costs at most the one variant in flight
+* only logs and a `MANIFEST.txt` transfer back — 1200 CIFs would be far too much, and an
+  oversized transfer has previously made a job that *succeeded* report failure
 
 ## Why a VPN drop is safe
 
