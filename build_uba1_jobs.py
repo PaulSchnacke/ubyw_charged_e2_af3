@@ -121,14 +121,47 @@ def job_thioester(tail_len, with_ube2w, seeds, name):
 
 
 def external_bonds(d):
-    """Count external bonds AF3 will create per ligand atom, for the valence gate."""
+    """External bonds AF3 will create, keyed BY LIGAND CHAIN then atom name.
+
+    Must be per chain, not pooled by atom name. With two custom ligands in one job
+    (e.g. LisoK + UBGG) a pooled dict hands each ligand the other's atom names, and
+    ccd_valence then raises 'external bond names undeclared atom'. Pooling happened to
+    work while every job had a single custom ligand, which is exactly how this class of
+    bug survives.
+    """
     lig_ids = {s["ligand"]["id"] for s in d["sequences"] if "ligand" in s}
     ext = {}
     for (c1, _r1, a1), (c2, _r2, a2) in d.get("bondedAtomPairs", []):
         for cid, atom in ((c1, a1), (c2, a2)):
             if cid in lig_ids:
-                ext[atom] = ext.get(atom, 0) + 1
+                ext.setdefault(cid, {})
+                ext[cid][atom] = ext[cid].get(atom, 0) + 1
     return ext
+
+
+def resolve_ccd(ccddir, code):
+    """Path to the CIF that DECLARES `code` as its `_chem_comp.id`.
+
+    AF3 resolves a ligand by the component id inside the CIF, not by the filename. In
+    ccd_v2/ the two differ: LisoK_userCCD.cif declares `_chem_comp.id LIG-1`. Both the
+    valence gate and the embedder must agree on which file a declared code means, so
+    this is the single place that decides. Returns None when nothing declares it.
+    """
+    direct = os.path.join(ccddir, f"{code}_userCCD.cif")
+    if os.path.exists(direct):
+        declared = next((l.split()[1] for l in open(direct)
+                         if l.startswith("_chem_comp.id")), None)
+        if declared == code:
+            return direct
+    for f in sorted(os.listdir(ccddir)):
+        if not f.endswith("_userCCD.cif"):
+            continue
+        p = os.path.join(ccddir, f)
+        declared = next((l.split()[1] for l in open(p)
+                         if l.startswith("_chem_comp.id")), None)
+        if declared == code:
+            return p
+    return None
 
 
 def check_job(d, ccddir, label):
@@ -152,11 +185,13 @@ def check_job(d, ccddir, label):
         code = s["ligand"]["ccdCodes"][0]
         if code in ("ATP", "MG"):
             continue                    # standard CCDs, no external bonds declared
-        path = os.path.join(ccddir, f"{code}_userCCD.cif")
-        if not os.path.exists(path):
-            problems.append(f"missing CCD {path}")
+        path = resolve_ccd(ccddir, code)
+        if path is None:
+            problems.append(f"no CCD in {ccddir} declares _chem_comp.id {code!r}")
             continue
-        check_ccd(open(path).read(), external=ext, label=f"{label}:{code}")
+        # only THIS ligand chain's external bonds, never the pooled set
+        check_ccd(open(path).read(), external=ext.get(s["ligand"]["id"], {}),
+                  label=f"{label}:{code}")
 
     for pair in d.get("bondedAtomPairs", []):
         chains = [p[0] for p in pair]
@@ -178,7 +213,13 @@ def check_job(d, ccddir, label):
 
 
 def embed_ccd(d, ccddir):
-    """Concatenate the custom CCD blocks this job needs into userCCD."""
+    """Concatenate the custom CCD blocks this job needs into userCCD.
+
+    GATE: the ccdCode a job declares must equal the `_chem_comp.id` inside the CIF, not
+    merely the filename stem. ccd_v2/LisoK_userCCD.cif declares `_chem_comp.id LIG-1`, so
+    a job asking for 'LisoK' would reference a component absent from its own userCCD --
+    a failure that surfaces only when AF3 runs.
+    """
     blocks = []
     for s in d["sequences"]:
         if "ligand" not in s:
@@ -186,8 +227,12 @@ def embed_ccd(d, ccddir):
         code = s["ligand"]["ccdCodes"][0]
         if code in ("ATP", "MG"):
             continue
-        blocks.append(open(os.path.join(ccddir,
-                                        f"{code}_userCCD.cif")).read().rstrip() + "\n")
+        path = resolve_ccd(ccddir, code)
+        if path is None:
+            raise ValueError(f"job declares ccdCode {code!r} but no CIF in {ccddir} "
+                             f"defines it -- AF3 resolves by the component id, so this "
+                             f"job would reference a component it does not carry")
+        blocks.append(open(path).read().rstrip() + "\n")
     if blocks:
         d["userCCD"] = "\n".join(blocks)
 

@@ -1,0 +1,107 @@
+{
+  "name": "ube2w_ub75_charged_v2",
+  "sequences": [
+    {
+      "protein": {
+        "id": "A",
+        "sequence": "PMADEKPKEGVKTENNDHINLKVAGQDGSVVQFKIKRHTPLSKLMKAYCERQGLSMRQIRFRFDGQPINETDTPAQLEMEDEDTIDVFQQQTGGVY"
+      }
+    },
+    {
+      "protein": {
+        "id": "B",
+        "sequence": "MASMQKRLQKELLALQNDPPPGMTLNEKSVQNSITQWIVDMEGAPGTLYEGEKFQLLFKFSSRYPFDSPQVMFTGENIPVHPHVYSNGHICLSILTEDWSPALSVQSVCLSIISMLSSCKEKRRPPDNSFYVRTCNKNPKKTKWWYHDDTC"
+      }
+    },
+    {
+      "protein": {
+        "id": "U",
+        "sequence": "MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLR"
+      }
+    },
+    {
+      "ligand": {
+        "id": "L",
+        "ccdCodes": [
+          "LIG-1"
+        ]
+      }
+    },
+    {
+      "ligand": {
+        "id": "G",
+        "ccdCodes": [
+          "UBG1"
+        ]
+      }
+    }
+  ],
+  "modelSeeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "dialect": "alphafold3",
+  "version": 1,
+  "bondedAtomPairs": [
+    [
+      [
+        "A",
+        12,
+        "NZ"
+      ],
+      [
+        "L",
+        1,
+        "C01"
+      ]
+    ],
+    [
+      [
+        "U",
+        74,
+        "C"
+      ],
+      [
+        "G",
+        1,
+        "N1"
+      ]
+    ],
+    [
+      [
+        "G",
+        1,
+        "C1"
+      ],
+      [
+        "B",
+        91,
+        "SG"
+      ]
+    ]
+  ],
+  "userCCD": "data_LIG-1\n#\n_chem_comp.id LIG-1\n_chem_comp.name 'D-alanine isopeptide moiety (aisoK)'\n_chem_comp.type non-polymer\n_chem_comp.formula ?\n_chem_comp.mon_nstd_parent_comp_id ?\n_chem_comp.pdbx_synonyms ?\n_chem_comp.formula_weight ?\n#\nloop_\n_chem_comp_atom.comp_id\n_chem_comp_atom.atom_id\n_chem_comp_atom.type_symbol\n_chem_comp_atom.charge\n_chem_comp_atom.pdbx_leaving_atom_flag\n_chem_comp_atom.pdbx_model_Cartn_x_ideal\n_chem_comp_atom.pdbx_model_Cartn_y_ideal\n_chem_comp_atom.pdbx_model_Cartn_z_ideal\nLIG-1 O01 O 0 N -0.375 2.266 1.151\nLIG-1 C01 C 0 N -0.776 1.127 0.961\nLIG-1 C02 C 0 N -0.303 0.199 -0.138\nLIG-1 N01 N 0 N -1.102 -1.035 -0.086\nLIG-1 C03 C 0 N 1.171 -0.122 0.052\nLIG-1 H01 H 0 N -0.471 0.692 -1.101\nLIG-1 H02 H 0 N -0.747 -1.695 -0.779\nLIG-1 H03 H 0 N -2.063 -0.832 -0.364\nLIG-1 H04 H 0 N 1.775 0.791 0.012\nLIG-1 H05 H 0 N 1.359 -0.594 1.024\nLIG-1 H06 H 0 N 1.533 -0.797 -0.731\n#\nloop_\n_chem_comp_bond.atom_id_1\n_chem_comp_bond.atom_id_2\n_chem_comp_bond.value_order\n_chem_comp_bond.pdbx_aromatic_flag\nO01 C01 DOUB N\nC01 C02 SING N\nC02 N01 SING N\nC02 C03 SING N\nC02 H01 SING N\nN01 H02 SING N\nN01 H03 SING N\nC03 H04 SING N\nC03 H05 SING N\nC03 H06 SING N\n#\n\ndata_UBG1\n#\n_chem_comp.id UBG1\n_chem_comp.name 'Ub Gly75 with an open thioester valence (no OXT)'\n_chem_comp.type non-polymer\n_chem_comp.formula ?\n_chem_comp.mon_nstd_parent_comp_id ?\n_chem_comp.pdbx_synonyms ?\n_chem_comp.formula_weight ?\n#\nloop_\n_chem_comp_atom.comp_id\n_chem_comp_atom.atom_id\n_chem_comp_atom.type_symbol\n_chem_comp_atom.charge\n_chem_comp_atom.pdbx_leaving_atom_flag\n_chem_comp_atom.pdbx_model_Cartn_x_ideal\n_chem_comp_atom.pdbx_model_Cartn_y_ideal\n_chem_comp_atom.pdbx_model_Cartn_z_ideal\nUBG1 N1 N 0 N -0.408 1.122 -0.521\nUBG1 CA1 C 0 N -0.547 -0.210 0.059\nUBG1 C1 C 0 N 0.735 -0.974 -0.134\nUBG1 O1 O 0 N 1.854 -0.548 0.120\nUBG1 H01 H 0 N 0.486 1.517 -0.212\nUBG1 H02 H 0 N -0.767 -0.151 1.128\nUBG1 H03 H 0 N -1.352 -0.755 -0.441\n#\nloop_\n_chem_comp_bond.atom_id_1\n_chem_comp_bond.atom_id_2\n_chem_comp_bond.value_order\n_chem_comp_bond.pdbx_aromatic_flag\nN1 CA1 SING N\nCA1 C1 SING N\nC1 O1 DOUB N\nN1 H01 SING N\nCA1 H02 SING N\nCA1 H03 SING N\n#\n"
+}
