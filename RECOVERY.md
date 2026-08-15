@@ -55,6 +55,30 @@ that needs roughly 3 × 25 × 9 min ≈ 11 h. Comfortable, but if a batch does h
 the per-variant harvest means the finished variants are already safe in `$HOME` and only
 the one in flight is lost.
 
+## Telling a VPN drop apart from a job failure
+
+Seen for real on 2026-08-15 at ~22 h of job wall time. The signature is unambiguous:
+
+```
+ssh: connect to host euler.ethz.ch port 22: Operation timed out
+```
+
+That is **the tunnel, not the jobs.** Slurm keeps running them; you have simply lost the
+ability to look. Reconnect the VPN and re-run the same command.
+
+**Two diagnostic traps, both of which cost me a turn:**
+
+1. **A failed remote command can return empty stdout with an apparently clean status.**
+   The first call after the drop printed *nothing at all* — no error, no rows — which
+   reads like "the queue is empty and the model directories are gone", i.e. catastrophe,
+   when the truth was "the command never ran". Always check `stderr` and the exit code,
+   not just stdout. An empty result from a command that should always print something
+   (`hostname`, `ls -d ~`) means the connection failed, not that the data vanished.
+2. **The ledger's `state` is the last *polled* state, not live truth.** It said `running`
+   for all four batches — correct as of the last successful poll, but the daemon's poller
+   cannot reach the host either while the tunnel is down. Treat ledger state during an
+   outage as "last known", and re-confirm against `squeue` once reconnected.
+
 ## Why a VPN drop is safe
 
 1. **Slurm keeps running the job.** The submission is complete; nothing streams from
