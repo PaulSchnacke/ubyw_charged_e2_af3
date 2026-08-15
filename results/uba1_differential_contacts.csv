@@ -1,0 +1,17 @@
+site,ube2w,uba1_residue,freq_ub75,freq_ub76,delta
+thio,without,631,0.776,0.08,0.6960000000000001
+cys,without,624,0.976,0.288,0.688
+cys,without,625,0.664,0.288,0.37600000000000006
+thio,without,599,0.712,1.0,-0.28800000000000003
+cys,without,898,0.0,0.36,-0.36
+thio,without,479,0.552,1.0,-0.44799999999999995
+thio,without,626,0.032,0.568,-0.5359999999999999
+thio,without,577,0.016,0.64,-0.624
+cys,without,515,0.0,0.672,-0.672
+thio,without,893,0.184,0.904,-0.72
+thio,without,478,0.0,0.912,-0.912
+thio,without,598,0.008,0.992,-0.984
+cys,without,477,0.0,1.0,-1.0
+cys,without,478,0.0,1.0,-1.0
+cys,without,480,0.0,1.0,-1.0
+cys,without,574,0.0,1.0,-1.0
