@@ -26,34 +26,64 @@ All write their real results into **`$HOME`** on Euler, never scratch:
   harvested per variant **as each finishes**, so a kill costs at most the one variant in
   flight
 
-> **Resume threshold — read before re-running.** AF3 writes **5 samples per seed**, so
-> 25 seeds = **125 models** per variant, not 100. The submitted script's skip test is
-> `-ge 100`, which would treat a variant harvested at 100 models (20 seeds) as complete
-> and silently leave it 20% short. This does **not** affect the current run — nothing was
-> pre-existing, so nothing was skipped — but **any re-run must use `-ge 125`**, or
+> **Resume threshold — read before re-running.** AF3 writes **5 samples per seed plus one
+> top-ranked copy**, so 25 seeds = **126 files** per variant. Measured, not assumed: every
+> completed variant harvested exactly 126.
+>
+> The originally submitted script's skip test was `-ge 100`, which would treat a variant
+> at 100 files (20 seeds) as complete and silently leave it 20% short. That did **not**
+> affect the first run — nothing was pre-existing, so nothing was skipped — and the
+> aden-resubmit script uses `-ge 126`. **Any further re-run must use `-ge 126` too**, or
 > better, delete the incomplete variant's directory and let it rebuild. Check with:
 > ```
-> for d in ~/ubyw_uba1_models/uba1_*; do echo "$(basename $d) $(ls $d/*.cif|wc -l)/125"; done
+> for d in ~/ubyw_uba1_models/uba1_*; do echo "$(basename $d) $(ls $d/*.cif|wc -l)/126"; done
 > ```
-> A variant showing anything other than 125 is incomplete regardless of what the job's
-> exit status said.
+> A variant showing anything other than 126 is incomplete regardless of what the job's
+> exit status said. (I first wrote 125 here, reasoning from 5 × 25 without checking; the
+> extra file is AF3's top-ranked duplicate. `qc_uba1.py` skips it by requiring `seed-` in
+> the filename, so the analysis sees 125 real models.)
 * only logs and a `MANIFEST.txt` transfer back — 1200 CIFs would be far too much, and an
   oversized transfer has previously made a job that *succeeded* report failure
 
-## State as of the last check (2026-08-15, ~15:50)
+## State as of the last check (2026-08-15, ~21:30)
 
 | | |
 |---|---|
 | MSAs | **complete**, 110-111 MB each, in `~/ubyw_uba1_msa/` |
-| batches 1-3 | **running**, ~1 h elapsed, **~21.8 h walltime remaining** each |
-| batch 4 (`309c38e2`) | **queued**, blocked on `QOSMaxGRESPerUser` — normal, it starts as a slot frees |
-| models harvested | 0 so far (first variant of each batch still in inference) |
-| home quota | 20.2 GB of 45 GB soft — 1200 CIFs will not threaten it |
+| batch 1 (`afeb8aec`) | **succeeded** |
+| batch 3 (`25e500e4`) | **succeeded** |
+| batches 2 & 4 | **running** |
+| variants complete | **5 of 12**, 126 files each (630 total) |
+| **4 `aden` variants** | **FAILED at the graft, fixed, awaiting resubmit** — see below |
+| bond-drop check | **none** across every production log — all declared bonds kept |
 
-Walltime headroom is the number that matters overnight: ~21.8 h remaining against a job
-that needs roughly 3 × 25 × 9 min ≈ 11 h. Comfortable, but if a batch does hit the wall,
-the per-variant harvest means the finished variants are already safe in `$HOME` and only
-the one in flight is lost.
+### The `aden` failure: a gate that failed a correct job
+
+All four `uba1_aden_*` variants died **before AF3 ran**, which is why they left no log
+while their batch-mates finished. `graft_msa.py` asserted
+
+```python
+d.get("userCCD") or not any("ligand" in s for s in d["sequences"])
+```
+
+— "any ligand implies a userCCD". True for **custom** components, false for **standard**
+ones: ATP and MG resolve from AF3's own CCD and legitimately carry none. So the only four
+jobs with ATP/Mg were rejected with `AssertionError: ligand present but userCCD lost`.
+
+Same class as the `frcmod.lyq` filename check that once aborted a passing build: **a guard
+whose premise is wrong is worse than no guard** — it burns a queue cycle and it teaches
+you to distrust the check.
+
+Fixed to test for custom ligands specifically (exempting ATP/ADP/AMP/MG/ZN/GTP/GDP/SO4/
+PO4/GOL), and verified **both** directions, which is the point of a gate:
+
+* all five job shapes graft — aden (0 bonds, no userCCD), cys (no ligand), thio (2 bonds,
+  userCCD preserved), ± UBE2W;
+* the guard **still fires** on the real bug — deleting `userCCD` from a `UBGG` job gives
+  `custom ligand(s) ['UBGG'] present but userCCD lost`, exit 1, and **no output written**.
+
+The resubmit (2 batches of 2) was blocked by a VPN drop during staging. The ledger showed
+**no partial job registered**, so there is nothing to clean up — just resubmit.
 
 ## Telling a VPN drop apart from a job failure
 
