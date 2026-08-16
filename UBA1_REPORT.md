@@ -1,8 +1,10 @@
 # Does Ub(1-75) fail at UBA1? — AF3 results, both catalytic sites
 
-**Status: 6 of 12 variants complete (750 models). The 4 adenylation variants are
-re-running after a bug; 2 remain queued.** Everything below is measured from the 750
-harvested models, recomputed here rather than copied from any log.
+**Status: 7 of 12 variants complete (875 models). The 4 adenylation variants are
+re-running after a bug; 1 remains queued.** Everything below is measured from the harvested
+models, recomputed here rather than copied from any log. The geometry statistics use all
+875; the QC integrity table and the contact map were computed on the first 750 and are
+unchanged by the seventh variant.
 
 ---
 
@@ -12,8 +14,11 @@ harvested models, recomputed here rather than copied from any log.
 every model; it simply sits **2–3.5 Å further out** than Ub(1-76), which is what removing
 one glycine from a flexible tail predicts on geometry alone. There is **no single UBA1
 residue that admits the long tail and refuses the short one** — what changes is a diffuse
-loss of contact across the whole ATP pocket (Fig. 2). And **UBE2W's presence changes
-nothing**: −0.04 Å (non-covalent) and −0.09 Å (thioester), both CIs spanning zero.
+loss of contact across the whole ATP pocket (Fig. 2). And **UBE2W's presence is
+chemically irrelevant** — it shifts the C-terminus by 0.03–0.14 Å, roughly **25× less than
+tail length does** (Fig. 1c). See §4 for why "irrelevant" and not "not significant": on the
+full 125-model set those tiny CIs *exclude* zero, which is a clean demonstration of why
+this design reports effect sizes rather than p-values.
 
 Read against the UBE2W half of the project, that localises the defect: if UBA1 accommodates
 the shorter donor with only a proportionate loss of reach, the failure is more likely to
@@ -49,24 +54,26 @@ number of bonds"** in any production log — AF3 kept every bond it was given.
 
 ## 3. Results
 
-![Reach, Cys632 separation, and thioester planarity](/Users/paulschnacke/.claude-science/orgs/ca0de5e3-5761-4638-ba8d-0f80ff975d0d/artifacts/proj_ad45f2d48e7d/eb13b240-4bff-4fe1-8907-2f116de775b2/vc0d7b81c_uba1_results.png)
+![Reach, Cys632 separation, and thioester planarity](figures/uba1_results.png)
 
 **Fig. 1 — (a)** Distance from the Ub C-terminal carbonyl carbon to the centroid of the
 six annotated ATP-binding residues (478, 504, 515, 528, 576, 577). Dots are individual
-models, bars are medians. Ub(1-75) sits **+3.45 Å** further out in the non-covalent
-treatment (bootstrap 95% CI [+3.38, +3.51]) and **+1.88 Å** in the thioester treatment
-(CI [+1.71, +2.08]). Both are consistent with the ~3.5 Å a glycine contributes; the
+models, bars are medians. Ub(1-75) sits **+3.43 Å** further out in the non-covalent
+treatment (bootstrap 95% CI [+3.41, +3.45]) and **+1.94 Å** in the thioester treatment
+(CI [+1.82, +2.05]). Both are consistent with the ~3.5 Å a glycine contributes; the
 smaller thioester shift reflects the tail being anchored at Cys632. **(b)** Distance to
 Cys632 Sγ in the non-covalent jobs, the honest reach measure (in the thioester jobs this
-is 1.5 Å by construction). Every model sits **30–36 Å** away — far outside the reactive
-range — for both tail lengths and with or without UBE2W. **(c)** Bond-angle sum at the
-acyl carbon in the covalent jobs: median **358.7°**, i.e. planar sp², versus the 328.4°
-sp³ that the earlier bare-`GLY` CCD produced. n = 125 models per variant throughout.
+is 1.5 Å by construction). Every model sits **28–36 Å** away — far outside the reactive
+range — for both tail lengths, with and without UBE2W. **(c)** All four measured effects on
+a common scale, medians with bootstrap 95% CIs. Tail length moves the C-terminus 1.9–3.4 Å;
+UBE2W moves it 0.03–0.14 Å. The shaded band marks the sub-0.5 Å region, below which a shift
+carries no chemical meaning for a nucleophilic attack — every UBE2W effect lies inside it.
+n = 125 models per variant throughout.
 
 Three things follow.
 
 **The tails differ by exactly the length of a glycine, and nothing more.** A Gly residue
-contributes ~3.5 Å of reach, and the measured non-covalent shift is +3.45 Å. There is no
+contributes ~3.5 Å of reach, and the measured non-covalent shift is +3.43 Å. There is no
 extra penalty beyond the arithmetic — no sign that the shorter tail is excluded, misdocked,
 or forced into a different pose.
 
@@ -81,7 +88,7 @@ find on its own.
 tail lengths behaving identically, so the new single-glycine component `UBG1` is as sound
 as the established dipeptide `UBGG`.
 
-![Differential contacts between the two tail lengths](/Users/paulschnacke/.claude-science/orgs/ca0de5e3-5761-4638-ba8d-0f80ff975d0d/artifacts/proj_ad45f2d48e7d/22fa00e6-7d31-41dd-a1a2-3b2cdadb8854/v40e90988_uba1_contacts.png)
+![Differential contacts between the two tail lengths](figures/uba1_contacts.png)
 
 **Fig. 2 — What the shorter tail loses.** UBA1 residues whose contact frequency differs
 by ≥25% between the two tail lengths (contact = any heavy atom within 4.5 Å of the Ub
@@ -105,12 +112,12 @@ C-terminus withdrawing by a couple of ångström, not of a steric clash.
 This is worth stating explicitly, because the project's earlier AF3 rounds got it wrong in
 the other direction and reported *p* = 0.004 from a design whose floor was 0.5.
 
-**The experimental unit is the construct, not the model.** 750 models sound like a lot,
-but they are 6 conditions sampled 125 times each. AF3 seeds of the same complex are
+**The experimental unit is the construct, not the model.** 875 models sound like a lot,
+but they are 7 conditions sampled 125 times each. AF3 seeds of the same complex are
 repeated measurements of one system, in the same sense that 125 photographs of one mouse
-are not 125 mice. Measured here: the intraclass correlation is **0.87** — 87% of the
-variance sits *between* conditions — giving a design effect of 109, so 375 models carry
-roughly **3 independent observations'** worth of information.
+are not 125 mice. Measured here on all 875: the intraclass correlation is **0.93** — 93% of
+the variance sits *between* conditions — giving a design effect of 117, so all 875 models
+carry roughly **8 independent observations'** worth of information.
 
 **The design floor.** With 2 tail lengths and one "working" construct there are C(2,1) = 2
 distinct label assignments, so the smallest attainable one-sided permutation *p* is
@@ -119,9 +126,28 @@ analysis script now prints this before any statistic, so the number can never be
 without its ceiling.
 
 **So the deliverable is an effect size with a CI plus the contact list.** The bootstrap
-intervals in Fig. 1a are tight ([+3.38, +3.51]) because AF3's within-condition spread is
+intervals in Fig. 1a are tight ([+3.41, +3.45]) because AF3's within-condition spread is
 small, and that tightness is a statement about AF3's reproducibility, not about biology.
 Read them as "this is what the model consistently predicts", not "this is significant".
+
+**A worked example of exactly that trap, from this dataset.** When I had 25 models per
+variant, UBE2W's effect on reach came out as −0.04 Å with a CI spanning zero, and I wrote
+that UBE2W "changes nothing". With the full 125 models the same effect is **+0.03 Å with a
+CI of [+0.01, +0.06] — which excludes zero.** Nothing about the biology changed; I just
+sampled the same two structures more times, and a bootstrap CI narrows as √n regardless of
+whether the underlying quantity means anything.
+
+If this project's convention were to read "CI excludes zero" as a result, that would now
+read as *UBE2W significantly repositions the ubiquitin C-terminus* — on a shift of
+**0.03 Å**, about 1/30th of a C–C bond and far below the coordinate error of the method
+that produced it. The correct reading is the one Fig. 1c is drawn to make unavoidable:
+**tail length matters, UBE2W does not, and the ratio is ~25×.** Effect size and a
+pre-declared relevance threshold decide that; the interval does not.
+
+This is the same failure as round 2's *p* = 0.004 wearing different clothes. There the
+model count inflated a *p*-value; here it narrowed a CI. In both cases the fix is to fix
+the *unit* — 125 seeds of one construct are 125 pictures of one system — and to state a
+threshold for what size of effect would matter *before* looking at the interval.
 
 **Minima are not used anywhere.** "Closest approach over N models" keeps sliding downward
 as sampling deepens — it ranks tail behaviour (arm mobility) rather than positioning. All
@@ -183,6 +209,7 @@ if you want to test the UBA1 side experimentally.
 | | |
 |---|---|
 | 4 `aden` variants | **resubmitted** (`5aa4b377`, `4238b0ff`) after the graft bug — these carry ATP·Mg and are the direct adenylation-site test |
+| batch 4 delivered | `uba1_cys_ub76_with_ube2w`, completing the non-covalent 2×2 — this is the seventh variant |
 | batch 4 (`309c38e2`) | still running |
 | `jobs_ub75_v2/` | **not submitted** — the corrected UBE2W comparison, needs GPU time |
 
